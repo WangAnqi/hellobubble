@@ -1,0 +1,3 @@
+view   - the front of the game
+logic  - the logic of the game
+socket - network communication
