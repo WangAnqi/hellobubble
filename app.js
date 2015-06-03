@@ -1,41 +1,93 @@
-var http = require('http'),
-    querystring = require("querystring");
-exports.runServer = function(port){
-    port = port || 8080;
-    var server = http.createServer(function(req, res){
-        var _postData = '';
-        //on用于添加一个监听函数到一个特定的事件
-        req.on('data', function(chunk)
-        {
-            _postData += chunk;
-        })
-        .on('end', function()
-        {
-            req.post = querystring.parse(_postData);
-            handlerRequest(req, res);
-        });
-    }).listen(port);
-    console.log('Server running at http://127.0.0.1:'+ port +'/');
-};
-
-var route = require('./route');
-var handlerRequest = function(req, res){
-    //通过route来获取controller和action信息
-    var actionInfo = route.getActionInfo(req.url, req.method);
-    //如果route中有匹配的action，则分发给对应的action
-    if(actionInfo.action){
-        //假设controller都放到当前目录的controllers目录里面，还记得require是怎么搜索module的么？
-        var controller = require('./controllers/'+actionInfo.controller); // ./controllers/blog
-        if(controller[actionInfo.action]){
-            var ct = new controllerContext(req, res);
-            //动态调用，动态语言就是方便啊
-            //通过apply将controller的上下文对象传递给action
-            controller[actionInfo.action].apply(ct, actionInfo.args);
+var crypto = require('crypto');
+var WS = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
+require('net').createServer(function(o){
+    var key;
+    o.on('data',function(e){
+        if(!key){
+            //握手
+            console.log("Start the ws...");
+            key = e.toString().match(/Sec-WebSocket-Key: (.+)/)[1];
+            key = crypto.createHash('sha1').update(key + WS).digest('base64');
+            o.write('HTTP/1.1 101 Switching Protocols\r\n');
+            o.write('Upgrade: websocket\r\n');
+            o.write('Connection: Upgrade\r\n');
+            o.write('Sec-WebSocket-Accept: ' + key + '\r\n');
+            o.write('\r\n');
         }else{
-            handler500(req, res, 'Error: controller "' + actionInfo.controller + '" without action "' + actionInfo.action + '"')
-        }
-    }else{
-        //如果route没有匹配到，则当作静态文件处理
-        staticFileServer(req, res);
-    }
-};
+        	var tmp = decodeDataFrame(e);
+            console.log(tmp);
+            //sendTextData(o,tmp.PayloadData);
+            if(tmp.PayloadData == "close"){
+            	sendClose(o,"Client close the ws...");
+            }
+            if(tmp.Opcode==8){
+                o.end(); //断开连接
+                console.log("Close the ws...");
+            }
+        };
+    });
+}).listen(8000);
+
+function sendClose(o,buf){
+    var data = {
+                   FIN:1,
+                   Opcode:8,
+                   PayloadData:buf
+               };
+    o.write(encodeDataFrame(data));
+}
+
+function sendTextData(o,buf){
+    var data = {
+                   FIN:1,
+                   Opcode:1,
+                   PayloadData:buf
+               };
+    o.write(encodeDataFrame(data));
+}
+
+function decodeDataFrame(e){
+  var i=0,j,s,frame={
+    //解析前两个字节的基本数据
+    FIN:e[i]>>7,Opcode:e[i++]&15,Mask:e[i]>>7,
+    PayloadLength:e[i++]&0x7F
+  };
+  //处理特殊长度126和127
+  if(frame.PayloadLength==126)
+    frame.length=(e[i++]<<8)+e[i++];
+  if(frame.PayloadLength==127)
+    i+=4, //长度一般用四字节的整型，前四个字节通常为长整形留空的
+    frame.length=(e[i++]<<24)+(e[i++]<<16)+(e[i++]<<8)+e[i++];
+  //判断是否使用掩码
+  if(frame.Mask){
+    //获取掩码实体
+    frame.MaskingKey=[e[i++],e[i++],e[i++],e[i++]];
+    //对数据和掩码做异或运算
+    for(j=0,s=[];j<frame.PayloadLength;j++)
+      s.push(e[i+j]^frame.MaskingKey[j%4]);
+  }else s=e.slice(i,frame.PayloadLength); //否则直接使用数据
+  //数组转换成缓冲区来使用
+  s=new Buffer(s);
+  //如果有必要则把缓冲区转换成字符串来使用
+  if(frame.Opcode==1)s=s.toString();
+  //设置上数据部分
+  frame.PayloadData=s;
+  //返回数据帧
+  return frame;
+}
+
+function encodeDataFrame(e){
+  var s=[],o=new Buffer(e.PayloadData),l=o.length;
+  //输入第一个字节
+  s.push((e.FIN<<7)+e.Opcode);
+  //输入第二个字节，判断它的长度并放入相应的后续长度消息
+  //永远不使用掩码
+  if(l<126)s.push(l);
+  else if(l<0x10000)s.push(126,(l&0xFF00)>>2,l&0xFF);
+  else s.push(
+    127, 0,0,0,0, //8字节数据，前4字节一般没用留空
+    (l&0xFF000000)>>6,(l&0xFF0000)>>4,(l&0xFF00)>>2,l&0xFF
+  );
+  //返回头部分和数据部分的合并缓冲区
+  return Buffer.concat([new Buffer(s),o]);
+}
