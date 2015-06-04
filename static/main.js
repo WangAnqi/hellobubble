@@ -4,6 +4,7 @@
         myid=0;
         ws=new WebSocket("ws://183.173.38.97:8000/");
         ws.onopen=function(e){
+            ws.send("{'type':0}"); 
             console.log("成功");};
             
         ws.onmessage = function(e){
@@ -34,14 +35,14 @@
         team2 = Object.create(circle);
         team2.type=1;
         
-         if(team1.type==1){smallcircle.push(team2);}
+         if(team2.type==1){smallcircle.push(team2);}
         else{bigcircle.push(team2); }  
         team3 = Object.create(circle);
         team3.type=2;
         team3.x=800;
         team3.y=400;
         team3.size=100;   
-        if(team1.type==1){smallcircle.push(team3);}
+        if(team3.type==1){smallcircle.push(team3);}
         else{bigcircle.push(team3); }  
         
         win.onresize = myresize;
@@ -152,7 +153,7 @@
             myContext.strokeStyle = this.color2;
             myContext.beginPath();
             myContext.lineJoin = this.isVirus ? "mitter": "round";
-            if(this.type==1){
+            if(this.type == 1){
                 myContext.moveTo(this.x+this.size*1*Math.cos(0), this.y+this.size*1*Math.sin(0));
                 for(i=0;i<40;i++)
                 {
@@ -160,7 +161,7 @@
                     myContext.lineTo(this.x+this.size*0.95*Math.cos(Math.PI*(2*i+1)/40), this.y+this.size*0.95*Math.sin(Math.PI*(2*i+1)/40));
                 }
             }
-            else if(this.type==2)
+            else if(this.type == 2)
             {
                 myContext.moveTo(this.x+this.size*1*Math.cos(15), this.y+this.size*1*Math.sin(15));
                 for(i=0;i<6;i++)
