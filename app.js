@@ -1,6 +1,11 @@
 var crypto = require('crypto');
 var WS = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
-require('net').createServer(function(o){
+var net = require('net');
+var Server = net.createServer();
+
+playerlists = [];
+
+Server.on("connection",function(o){
     var key;
     o.on('data',function(e){
         if(!key){
@@ -16,7 +21,8 @@ require('net').createServer(function(o){
         }else{
         	var tmp = decodeDataFrame(e);
             console.log(tmp);
-            //sendTextData(o,tmp.PayloadData);
+            console.log(tmp.PayloadData);
+            sendTextData(o,tmp.PayloadData);
             if(tmp.PayloadData == "close"){
             	sendClose(o,"Client close the ws...");
             }
@@ -26,7 +32,8 @@ require('net').createServer(function(o){
             }
         };
     });
-}).listen(8000);
+});
+Server.listen(8000);
 
 function sendClose(o,buf){
     var data = {

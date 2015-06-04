@@ -2,4 +2,5 @@ view        - the front of the game
 controller  - the logic of the game
 model       - the data layout of the game
 socket      - network communication
+static      - static html/js/css files
 app.js      - run it to start the game server
