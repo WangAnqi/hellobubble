@@ -3,12 +3,18 @@
         mycanvas = document.getElementById("canvas");
         myContext = mycanvas.getContext("2d");
         
-        
+        mycanvas.onmousemove = function(a) {
+            mouseX = a.clientX;
+            mouseY = a.clientY; 
+            getDirection();
+        };
+        DirectionX=0;
+        DirectionY=0;
         smallcircle=[];
         bigcircle=[];
         team1 = Object.create(circle);
         team1.x=200;
-        team1.size=20;
+        team1.size=100;
         team1.name="23333"
         if(team1.isAgitated){smallcircle.push(team1);}
         else{bigcircle.push(team1); } 
@@ -28,7 +34,19 @@
         
         win.onresize = myresize;
         myresize();
+        $("#playBtn")[0].onclick=clickplay;
         setInterval(paint, 1E3 / 60);
+    }
+      
+    function clickplay(){
+        $("#overlays").hide();
+        myname = $("#nick")[0].value;
+        team1.name = myname;
+    }  
+    
+    function getDirection(){
+        DirectionX = (mouseX - winW / 2) / myscal;
+        DirectionY = (mouseY - winH / 2) / myscal;
     }
       
     function myresize(){
@@ -41,11 +59,23 @@
     
     function paint(){
         //myy++;
+        
         mysize=team1.size;
         myscal=0.8-mysize/200*0.2;
         if(myscal==0){myscal=0.05} 
-        team1.x++;
-        team1.y++;
+        if(DirectionX*DirectionX+DirectionY*DirectionY>100)
+        {
+            team1.x+=25*DirectionX/Math.sqrt(team1.size*(DirectionX*DirectionX+DirectionY*DirectionY));
+            team1.y+=25*DirectionY/Math.sqrt(team1.size*(DirectionX*DirectionX+DirectionY*DirectionY));
+        }
+        if(team1.x<0) {team1.x=0;}
+        if(team1.y<0) {team1.y=0;}
+        if(team1.x>10000) {team1.x=10000;}
+        if(team1.y>10000) {team1.y=10000;}
+        myx = team1.x
+        myy = team1.y;
+        
+        
         myContext.clearRect(0, 0, winW, winH);
         myContext.fillStyle = "#F2FBFF";
         myContext.fillRect(0, 0, winW, winH);
