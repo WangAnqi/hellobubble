@@ -19,14 +19,15 @@ Server.on("connection",function(o){
             o.write('Sec-WebSocket-Accept: ' + key + '\r\n');
             o.write('\r\n');
         }else{
-        	var tmp = decodeDataFrame(e);
-            console.log(tmp);
-            console.log(tmp.PayloadData);
-            sendTextData(o,tmp.PayloadData);
-            if(tmp.PayloadData == "close"){
+        	var packet = decodeDataFrame(e);
+            console.log(packet);
+            console.log(packet.PayloadData);
+            sendTextData(o,packet.PayloadData);
+            if(!packet.type)
+            if(packet.PayloadData == "close"){
             	o.end();
             }
-            if(tmp.Opcode==8){
+            if(packet.Opcode==8){
                 o.end(); //断开连接
                 console.log("Close the ws...");
             }
