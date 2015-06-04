@@ -24,7 +24,7 @@ Server.on("connection",function(o){
             console.log(tmp.PayloadData);
             sendTextData(o,tmp.PayloadData);
             if(tmp.PayloadData == "close"){
-            	sendClose(o,"Client close the ws...");
+            	o.end();
             }
             if(tmp.Opcode==8){
                 o.end(); //断开连接
