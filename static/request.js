@@ -28,8 +28,8 @@ ws.onclose = function(e){
 
 //test function
 function wstry(){
-	//ws.close();
-	ws.send("{'name':'tsinghua','age':104}");
+	ws.close();
+	//ws.send("{'name':'tsinghua','age':104}");
 }
 
 function clientclosesocket(){

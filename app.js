@@ -5,7 +5,7 @@ var Server = net.createServer();
 
 Server.on("connection",function(o){
     var key;
-    var intervals = [];
+    var intervals;
     console.log(typeof(o));
 
     o.on('data',function(e){
@@ -19,14 +19,14 @@ Server.on("connection",function(o){
             o.write('Connection: Upgrade\r\n');
             o.write('Sec-WebSocket-Accept: ' + key + '\r\n');
             o.write('\r\n');
-            
-            //timer
-            intervals.push(setInterval(sendPlayersAction,1000));
         }else{
-        	
-        	console.log(o.remoteAddress);
-        	console.log(o.remotePort);
-            sendTextData(o,o.remoteAddress+":"+o.remotePort);
+           
+
+        	//timer
+            intervals = setInterval(sendPlayersAction,1000);
+
+        	//console.log(o.remoteAddress);
+        	//console.log(o.remotePort);
 
         	var packet = decodeDataFrame(e);
         	//console.log(packet);
@@ -59,13 +59,14 @@ Server.on("connection",function(o){
     });
     
     o.on('close',function(e){
+    	clearInterval(intervals);
     	console.log("Close interval send data")
-        clearInterval(intervals[0]);
     });
 
     function sendPlayersAction(){
 	    if(key){
-            sendTextData(o,"{'name':'tsinghua','age':104}");
+            //sendTextData(o,"{'name':'tsinghua','age':104}");
+            sendTextData(o,o.remoteAddress+":"+o.remotePort);
             console.log("Come on!");
 	    }
     }
