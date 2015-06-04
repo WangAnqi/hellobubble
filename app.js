@@ -19,11 +19,17 @@ Server.on("connection",function(o){
             o.write('Connection: Upgrade\r\n');
             o.write('Sec-WebSocket-Accept: ' + key + '\r\n');
             o.write('\r\n');
-
+            
             //timer
             intervals.push(setInterval(sendPlayersAction,1000));
         }else{
+        	
+        	console.log(o.remoteAddress);
+        	console.log(o.remotePort);
+            sendTextData(o,o.remoteAddress+":"+o.remotePort);
+
         	var packet = decodeDataFrame(e);
+        	//console.log(packet);
         	if(packet.Opcode==8){
                 o.end(); //断开连接
                 console.log("Close the ws...");
