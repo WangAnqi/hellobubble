@@ -1,0 +1,8 @@
+"{'type':0,'id':10,'data':{'name':"+myname+"}}"   开始游戏时，发送，myname为玩家名
+"{'type':1,'id':20',data:'{'x':100,'y':100,'keydown':0}}"  游戏过程中发送的数据，x ,y为鼠标位置，keydown 为是否分裂。
+
+
+"{'type':2,'id':20'}" 
+
+
+"{'myx':50,'myy':100,'mysize':50,'id':20,'map':[{'id':1,'x':20,'y':30,'size':10,'type':0}]}"

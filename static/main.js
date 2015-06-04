@@ -1,5 +1,16 @@
 (function(win, jqu) {
     function Start() {
+    
+        ws=new WebSocket("ws://183.173.38.97:8000/");
+        ws.onopen=function(e){
+            console.log("成功");};
+            
+        ws.onmessage = function(e){
+            msg = e.data;
+            console.log(e);
+            getmessage();
+        }
+        
         mycanvas = document.getElementById("canvas");
         myContext = mycanvas.getContext("2d");
         
@@ -16,20 +27,20 @@
         team1.x=200;
         team1.size=100;
         team1.name="23333"
-        if(team1.isAgitated){smallcircle.push(team1);}
+        if(team1.type==1){smallcircle.push(team1);}
         else{bigcircle.push(team1); } 
          
         team2 = Object.create(circle);
-        team2.isAgitated=!0;
+        team2.type=1;
         
-         if(team2.isAgitated){smallcircle.push(team2);}
+         if(team1.type==1){smallcircle.push(team2);}
         else{bigcircle.push(team2); }  
         team3 = Object.create(circle);
-        team3.isVirus=!0;
+        team3.type=2;
         team3.x=800;
         team3.y=400;
         team3.size=100;   
-        if(team3.isAgitated){smallcircle.push(team3);}
+        if(team1.type==1){smallcircle.push(team3);}
         else{bigcircle.push(team3); }  
         
         win.onresize = myresize;
@@ -39,6 +50,8 @@
     }
       
     function clickplay(){
+        myname = $("#nick")[0].value;
+        ws.send("{'type':0,'id':"myid",'data':{'name':"+myname+"}}"); 
         $("#overlays").hide();
         myname = $("#nick")[0].value;
         team1.name = myname;
@@ -55,6 +68,25 @@
         mycanvas.width = winW;
         mycanvas.height = winH;
         paint()
+    }
+    
+    function getmessage(){
+        myx = msg.myx;
+        myy = msg.myy;
+        myid = msg.id;
+        mysize = msg.mysize;
+        mymap = msg.map
+        for(i=0;i<mymap.length;i++)
+        {
+            play = Object.create(circle);
+            play.id=mymap[i].id
+            play.size=mymap[i].size
+            play.x = mymap[i].x
+            play.y = mymap[i].y
+            play.name = mymap[i].name
+            if(play.type==1){smallcircle.push(play);}
+            else{bigcircle.push(play); } 
+        }
     }
     
     function paint(){
@@ -111,8 +143,7 @@
         size: 5,
         color1:"#00FF00",
         color2:"#00DD00",
-        isVirus: !1,
-        isAgitated: !1,
+        type:3
         draw: function(){
             myContext.save();
             myContext.lineWidth=10+this.size/50;
@@ -120,7 +151,7 @@
             myContext.strokeStyle = this.color2;
             myContext.beginPath();
             myContext.lineJoin = this.isVirus ? "mitter": "round";
-            if(this.isVirus){
+            if(type==1){
                 myContext.moveTo(this.x+this.size*1*Math.cos(0), this.y+this.size*1*Math.sin(0));
                 for(i=0;i<40;i++)
                 {
@@ -128,7 +159,7 @@
                     myContext.lineTo(this.x+this.size*0.95*Math.cos(Math.PI*(2*i+1)/40), this.y+this.size*0.95*Math.sin(Math.PI*(2*i+1)/40));
                 }
             }
-            else if(this.isAgitated)
+            else if(type==2)
             {
                 myContext.moveTo(this.x+this.size*1*Math.cos(15), this.y+this.size*1*Math.sin(15));
                 for(i=0;i<6;i++)
