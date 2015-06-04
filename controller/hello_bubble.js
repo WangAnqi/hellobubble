@@ -1,14 +1,15 @@
 var globle_height = 1000;//世界地图的高度
 var globle_width = 1000;//世界地图的宽度
-var randomBubble_queue = new Array(100);//随机生成的bubble
+var randomBubble_queue = new Array();//随机生成的bubble
 var User_queue = new Array();//用户队列
 var freq = 10;//刷新频率
 var Userlength = 0;//用户总数
+var Bubblelength = 0;
 var start = false;//开始
 
 //生成随机的Bubble
 function randomBubble(){
-    for(var i = randomBubble_queue.length; i<100; i++)
+    for(var i = Bubblelength; i<100; i++)
     {
         randomBubble_queue[i] = new Object();
         randomBubble_queue[i].x = Math.floor(Math.random() * globle_width);
@@ -17,6 +18,8 @@ function randomBubble(){
         randomBubble_queue[i].score = 1;
         randomBubble_queue[i].eaten = false;
     }
+    Bubblelength = 100;
+    console.log(randomBubble_queue);
 }
 
 //bubble自相残杀
@@ -25,26 +28,28 @@ function eat(){
     {
         for(var k = 0; k<randomBubble_queue.length; k++)
         {
-            if(distance(User_queue[i],randomBubble_queue[k]) <= 0)
-            {
-                checkstate(User_queue[i],randomBubble_queue[k]);
-                randomBubble_queue.splice(k,1);
+
+            if(distance(User_queue[i],randomBubble_queue[k]) <= User_queue[i].r + randomBubble_queue[k]) {
+                checkstate(User_queue[i], randomBubble_queue[k]);
+                randomBubble_queue.splice(k, 1);
+                Bubblelength--;
             }
         }
         for(var j = i+1; j<User_queue.length; j++)
         {
-            if(User_queue[i].r > User_queue[j].r)
-                if(distance(User_queue[i], User_queue[j]) <= 0)
-                {
+
+            if(User_queue[i].r > User_queue[j].r) {
+                if (distance(User_queue[i], User_queue[j]) < User_queue[i].r - User_queue[j].r) {
                     checkstate(User_queue[i], User_queue[j]);
                     User_queue.splice(j, 1);
                 }
-            else if(User_queue[i].r < User_queue[j].r)
-                if(distance(User_queue[j], User_queue[i]) <= 0)
-                {
+            }
+            else if(User_queue[i].r < User_queue[j].r) {
+                if (distance(User_queue[j], User_queue[i]) < User_queue[j].r - User_queue[i].r) {
                     checkstate(User_queue[j], User_queue[i]);
                     User_queue.splice(i, 1);
                 }
+            }
         }
     }
 }
@@ -64,7 +69,7 @@ function move()
 //检查bubble状态
 function checkstate(Bubblebig,Bubblesmall)
 {
-    Bubblebig.eaten = true;
+    Bubblesmall.eaten = true;
     Bubblebig.r = Math.sqrt(Bubblebig.r*Bubblebig.r + Bubblesmall.r*Bubblesmall.r);
     Bubblebig.v = 4000 / (Bubblebig.r * Bubblebig.r);
     Bubblebig.score += Bubblesmall.score;
@@ -74,28 +79,28 @@ function checkstate(Bubblebig,Bubblesmall)
 function distance(bubblebig, bubblesmall)
 {
     var dis = Math.sqrt((bubblebig.x - bubblesmall.x)*(bubblebig.x - bubblesmall.x) + (bubblebig.y - bubblesmall.y)*(bubblebig.y - bubblesmall.y));
-    if(!bubblesmall.id)
-        var radius = bubblebig.r;
-    else
-        var radius = bubblebig.r - bubblesmall.r;
-    var result = dis - radius;
-    return result;
+    return dis;
 }
 
-//分裂（未完待续）
+//分裂
 function splite(Bubble){
-    var count = Math.pow(2,Bubble.dividecount++);
-    for(var i = 0; i<count; i++)
-    {
-        Bubble.sub[i] = new Object();
-        Bubble.sub[i].score = Bubble.score / count;
-        Bubble.sub[i].r = Math.sqrt(1/count) * Bubble.r;
-    }
+    //var count = Math.pow(2,Bubble.dividecount++);
+    var r = Math.sqrt(1/2) * Bubble.r;
+    var speed = Bubble.v / 2;
+    var score = Bubble.score /2;
+    Bubble.r = r;
+    Bubble.v = speed;
+    Bubble.score = score;
+    Bubble.dividecount++;
+    var sx = Bubble.vecx - Bubble.x;
+    var sy = Bubble.vecy - Bubble.y;
+    var x = Bubble.x + 2*Bubble.r * (sx / Math.sqrt(sx*sx + sy*sy));
+    var y = Bubble.y + 2*Bubble.r * (sy / Math.sqrt(sx*sx + sy*sy));
+    addBubble(User_queue.length, x, y, Bubble.id, Bubble.vecx, Bubble.vecy, speed*3, Bubble.dividecount, score);
 }
 
 //添加bubble
 function addBubble(length){
-    User_queue.length++;
     User_queue[length] = new Object();
     User_queue[length].id = "user" + length;
     User_queue[length].x = Math.floor(Math.random()*1000);
@@ -112,6 +117,22 @@ function addBubble(length){
     User_queue[length].finish = false;
 }
 
+function addBubble(pos, x, y, r, id, vecx, vecy, v, dc, score)
+{
+    User_queue[pos] = new Object();
+    User_queue[pos].id = id;
+    User_queue[pos].x = x;
+    User_queue[pos].y = y;
+    User_queue[pos].r = r;
+    User_queue[pos].v = v;
+    User_queue[pos].vecx = vecx;
+    User_queue[pos].vecy = vecy;
+    User_queue[pos].eaten = false;
+    User_queue[pos].score = score;
+    User_queue[pos].dividecount = dc;
+    User_queue[pos].name = "string";
+    User_queue[pos].finish = false;
+}
 //初始化用户
 function initUser(){
     //新用户出现
@@ -119,21 +140,27 @@ function initUser(){
         Userlength++;
         addBubble(Userlength - 1);
     }
-    //某用户退出
-    for(var i = 0; i< User_queue.length; i++)
-        if(User_queue[i].finish)
-            User_queue[i].splice(i,1);
-    //更新行为
-    move();
-    //检查是否被吃
-    eat();
+    if(Userlength > 0) {
+        //某用户退出,或者分裂
+        for (var i = 0; i < User_queue.length; i++) {
+            if (User_queue[i].finish)
+                User_queue[i].splice(i, 1);
+            if(User_queue[i].dividecount != 0)
+                splite(User_queue[i]);
+        }
+        //更新行为
+        move();
+        //检查是否被吃
+        eat();
+    }
+    console.log(User_queue[Userlength-1]);
 }
 
 //开启服务器
 function begin()
 {
     //产生bubble
-    randomBubble();
+    setInterval("randomBubble()", 20*1000);
     //初始化用户
-    initUser();
+    setInterval("initUser()", 1000);
 }
