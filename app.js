@@ -3,10 +3,11 @@ var WS = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
 var net = require('net');
 var Server = net.createServer();
 
-playerlists = [];
-
 Server.on("connection",function(o){
     var key;
+    var intervals = [];
+    console.log(typeof(o));
+
     o.on('data',function(e){
         if(!key){
             //握手
@@ -18,23 +19,55 @@ Server.on("connection",function(o){
             o.write('Connection: Upgrade\r\n');
             o.write('Sec-WebSocket-Accept: ' + key + '\r\n');
             o.write('\r\n');
+
+            //timer
+            intervals.push(setInterval(sendPlayersAction,1000));
         }else{
         	var packet = decodeDataFrame(e);
-            console.log(packet);
-            console.log(packet.PayloadData);
-            sendTextData(o,packet.PayloadData);
-            if(!packet.type)
-            if(packet.PayloadData == "close"){
-            	o.end();
-            }
-            if(packet.Opcode==8){
+        	if(packet.Opcode==8){
                 o.end(); //断开连接
                 console.log("Close the ws...");
             }
+
+            console.log(packet);
+            data = packet.PayloadData;
+            //console.log(data);
+            //sendTextData(o,data);
+            switch (data.type){
+                case 1:
+                    var playerName = data.data;
+                break;
+                case 2:
+                    var playerAction = data.data; 
+                break;
+                case 3:
+                    var player = data.data;
+                    //delete the player
+
+                    o.end(); //断开连接
+                    console.log("Close the ws...");
+                break;
+                default:
+            }
         };
     });
+    
+    o.on('close',function(e){
+    	console.log("Close interval send data")
+        clearInterval(intervals[0]);
+    });
+
+    function sendPlayersAction(){
+	    if(key){
+            sendTextData(o,"{'name':'tsinghua','age':104}");
+            console.log("Come on!");
+	    }
+    }
+    
 });
 Server.listen(8000);
+
+
 
 function sendClose(o,buf){
     var data = {
