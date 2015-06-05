@@ -1,7 +1,7 @@
 var globle_height = 1000;//世界地图的高度
 var globle_width = 1000;//世界地图的宽度
 var randomBubble_queue = new Array();//随机生成的bubble
-var User_queue = new Array();//用户队列
+var User_queue = [];//用户队列
 var freq = 10;//刷新频率
 var Userlength = 0;//用户总数
 var Bubblelength = 0;
@@ -111,7 +111,7 @@ function splite(Bubble){
 
 //建立小球，返回ID
 exports.getID = function (){
-    User_queue[Userlength] = new Object();
+    User_queue[Userlength] = {};
     User_queue[Userlength].id = "user" + Userlength;
     User_queue[Userlength].x = Math.floor(Math.random()*1000);
     User_queue[Userlength].y = Math.floor(Math.random()*1000);
@@ -128,8 +128,8 @@ exports.getID = function (){
     User_queue[Userlength].start = false;
     User_queue[Userlength].type = 1;
     User_queue[Userlength].restart = false;
-    Userlength++;
     var result = { "id" : User_queue[Userlength].id };
+    Userlength++;
     return result;
 }
 
