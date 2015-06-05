@@ -115,7 +115,7 @@
             play.x = mymap[i].x
             play.y = mymap[i].y
             play.name = mymap[i].name
-            if(play.type==1){smallcircle.push(play);}
+            if(play.type==0){smallcircle.push(play);}
             else{bigcircle.push(play); } 
         }
         console.log(bigcircle)
@@ -194,7 +194,7 @@
                     myContext.lineTo(this.x+this.size*0.95*Math.cos(Math.PI*(2*i+1)/40), this.y+this.size*0.95*Math.sin(Math.PI*(2*i+1)/40));
                 }
             }
-            else if(this.type == 1)
+            else if(this.type == 0)
             {
                 myContext.moveTo(this.x+this.size*1*Math.cos(15), this.y+this.size*1*Math.sin(15));
                 for(i=0;i<6;i++)
