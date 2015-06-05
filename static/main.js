@@ -8,7 +8,7 @@
             console.log("成功");};
             
         ws.onmessage = function(e){
-            msg = e.data;
+            msg =  JSON.parse(e.data);
             console.log(e);
             getmessage();
         }
@@ -69,7 +69,7 @@
         winH = win.innerHeight;
         mycanvas.width = winW;
         mycanvas.height = winH;
-        paint()
+        paint();
     }
     
     function getmessage(){
