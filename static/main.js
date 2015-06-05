@@ -1,7 +1,10 @@
 (function(win, jqu) {
     function Start() {
     
+    
+        win.onbeforeunload = gamestop;
         myid=0;
+        mykeydown=!1
         ws=new WebSocket("ws://127.0.0.1:8000/");
         ws.onopen=function(e){
             ws.send('{"type":0}'); 
@@ -19,7 +22,18 @@
         mycanvas.onmousemove = function(a) {
             mouseX = a.clientX;
             mouseY = a.clientY; 
-            getDirection();
+            getDirection(0);
+        };
+        
+        win.onkeydown = function(d) {
+            32 != d.keyCode || keycontrol || (getDirection(1), keycontrol = !0);
+          
+        };
+        win.onkeyup = function(d) {
+            32 == d.keyCode && (keycontrol = !1);
+        };
+        win.onblur = function() {
+            keycontrol = !1
         };
         DirectionX=0;
         DirectionY=0;
@@ -51,18 +65,29 @@
         //setInterval(paint, 1E3 / 60);
     }
       
+    function gamestop(){
+        ws.send('{"type":3,"data":{"id":'+myid+'}}'); 
+    }
+    
     function clickplay(){
         myname = '"'+$("#nick")[0].value+'"';
         console.log(myname);
-        ws.send('{"type":1,"id":'+myid+',"data":{"name":'+myname+'}}'); 
+        ws.send('{"type":1,"data":{"id":'+myid+',"name":'+myname+'}}'); 
         $("#overlays").hide();
         myname = $("#nick")[0].value;
         team1.name = myname;
     }  
     
-    function getDirection(){
-        DirectionX = (mouseX - winW / 2) / myscal;
-        DirectionY = (mouseY - winH / 2) / myscal;
+    function getDirection(num){
+        DirectionX = (mouseX - winW / 2) / myscal+myx;
+        DirectionY = (mouseY - winH / 2) / myscal+myy;
+        if(num==0)
+        {
+            ws.send('{"type":2,"data":{"id":'+myid+',"directionx":'+DirectionX+',"directiony":'+DirectionY+',"keydown":false}}');
+        }
+        else {
+            ws.send('{"type":2,"data":{"id":'+myid+',"directionx":'+DirectionX+',"directiony":'+DirectionY+',"keydown":true}}');
+        }
     }
       
     function myresize(){
@@ -72,6 +97,7 @@
         mycanvas.height = winH;
         paint();
     }
+    
     
     function getmessage(){
         myx = msg.myx;
@@ -115,7 +141,7 @@
         myx = team1.x
         myy = team1.y;*/
         
-        
+        console.log(myx)
         myContext.clearRect(0, 0, winW, winH);
         myContext.fillStyle = "#F2FBFF";
         myContext.fillRect(0, 0, winW, winH);
