@@ -1,12 +1,12 @@
 var crypto = require('crypto');
 var WS = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
 var net = require('net');
+var con = require('./controller/controller');
 var Server = net.createServer();
 
-Server.on("connection",function(o){
+Server.on("connection",function(o){//o: class net.socket
     var key;
-    var intervals;
-    console.log(typeof(o));
+    var interval;
 
     o.on('data',function(e){
         if(!key){
@@ -19,41 +19,45 @@ Server.on("connection",function(o){
             o.write('Connection: Upgrade\r\n');
             o.write('Sec-WebSocket-Accept: ' + key + '\r\n');
             o.write('\r\n');
-        }else{
-           
+            
+            //console.log(o.remoteAddress);
+            //console.log(o.remotePort);
 
-        	//timer
+            //timer
             intervals = setInterval(sendPlayersAction,1000);
-
-        	//console.log(o.remoteAddress);
-        	//console.log(o.remotePort);
-
-        	var packet = decodeDataFrame(e);
-        	//console.log(packet);
-        	if(packet.Opcode==8){
+        }else{
+        	
+        	  var packet = decodeDataFrame(e);
+        	  
+        	  if(packet.Opcode==8){
                 o.end(); //断开连接
                 console.log("Close the ws...");
             }
-
-            console.log(packet);
-            data = packet.PayloadData;
-            //console.log(data);
-            //sendTextData(o,data);
-            switch (data.type){
-                case 1:
-                    var playerName = data.data;
-                break;
-                case 2:
-                    var playerAction = data.data; 
-                break;
-                case 3:
-                    var player = data.data;
-                    //delete the player
-
-                    o.end(); //断开连接
-                    console.log("Close the ws...");
-                break;
-                default:
+            else{
+                console.log(packet);
+                strdata = packet.PayloadData;
+                data = JSON.parse(strdata);
+                //console.log(data);
+                //sendTextData(o,data);
+                console.log(data.type);
+                switch (data.type){
+                    case 0:
+                        con.getID();
+                    case 1:
+                        var playerName = data.data;
+                    break;
+                    case 2:
+                        var playerAction = data.data; 
+                    break;
+                    case 3:
+                        var player = data.data;
+                        //delete the player
+    
+                        o.end(); //断开连接
+                        console.log("Close the ws...");
+                    break;
+                    default:
+                }    
             }
         };
     });
@@ -65,7 +69,6 @@ Server.on("connection",function(o){
 
     function sendPlayersAction(){
 	    if(key){
-            //sendTextData(o,"{'name':'tsinghua','age':104}");
             sendTextData(o,o.remoteAddress+":"+o.remotePort);
             console.log("Come on!");
 	    }

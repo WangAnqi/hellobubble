@@ -1,6 +1,6 @@
-view        - the front of the game
-controller  - the logic of the game
-model       - the data layout of the game
-socket      - network communication
-static      - static html/js/css files
-app.js      - run it to start the game server
+app.js      -  run it to start the game server
+controller  -  the logic of the game
+static      -  the front of the game:static html/js/css files
+json.js     -  communication data form/can be deleted
+nginx.conf  -  nginx configure/can be deleted
+README      -  this file

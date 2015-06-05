@@ -1,18 +1,27 @@
-/*from web client to server*/
-//connect
-{"type":0}
-//start game
-{"type":1, "data":{"id":10, "name":"dogedoge"}}
-//bubble's action
-{"type":2, "data":{"id":510, "direction":"?","mouse":"w"}}
-//close the game
-{"type":3, "data":{"id":203}}
+exports.getID = function(){
+	 newID = {"id":200};
+     return JSON.stringify(newID);
+}
 
-/*from server to webclient*/
-//open the ws
-{"id":2333}
-{'myx':50,'myy':100,'mysize':50,'id':20, 'live':true, 'map':[{'id':1,'x':20,'y':30,'size':10,'type':0,'name':'123'}]}
+exports.setIDName = function(data){
 
+}
+
+exports.setIDAction = function(datad){
+
+}
+
+exports.setIDQuitGame = function(data){
+
+}
+
+exports.setIDEndGame = function(data){
+
+}
+
+exports.getIDMapAction = function(data){
+
+}
 //net --- server
 /*
 getID() ---return: a new id
