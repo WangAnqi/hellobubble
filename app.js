@@ -43,6 +43,7 @@ Server.on("connection",function(o){//o: class net.socket
                     case 0:
                         id = con.getID();
                         //timer
+                        console.log(id);
                         intervals = setInterval(sendPlayersAction,1000,id);
                     case 1:
                         var playerName = data.data;
@@ -71,7 +72,8 @@ Server.on("connection",function(o){//o: class net.socket
     function sendPlayersAction(id){
 	    if(key){
             actions = con.getIDMapAction(id.id);
-            sendTextData(JSON.stringify(actions));
+            console.log(actions);
+            sendTextData(o,JSON.stringify(actions));
             console.log("Come on!");
 	    }
     }
