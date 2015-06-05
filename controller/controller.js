@@ -1,5 +1,5 @@
 exports.getID = function(){
-	newID = {"id":200};
+	newID = {"id":20};
     return newID;
 }
 
