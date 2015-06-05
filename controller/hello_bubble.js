@@ -129,7 +129,7 @@ exports.getID = function (){
     User_queue[Userlength].type = 1;
     User_queue[Userlength].restart = false;
     Userlength++;
-    var result = { "id" : User_queue[length].id};
+    var result = { "id" : User_queue[Userlength].id};
     return result;
 }
 
