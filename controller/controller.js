@@ -20,7 +20,7 @@ exports.setIDEndGame = function(data){
 }
 
 exports.getIDMapAction = function(data){
-
+    return {"myx":50,"myy":100,"mysize":50,"id":20, "live":true, "map":[{"id":1,"x":20,"y":30,"size":10,"type":0,"name":"123"}]}
 }
 //net --- server
 /*
