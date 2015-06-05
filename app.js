@@ -3,6 +3,7 @@ var WS = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
 var net = require('net');
 var con = require('./controller/hello_bubble');
 var Server = net.createServer();
+var INTIME = 200;
 
 Server.on("connection",function(o){//o: class net.socket
     var key;
@@ -43,7 +44,7 @@ Server.on("connection",function(o){//o: class net.socket
                         player_id = con.getID();
                         //timer
                         console.log(player_id);
-                        interval = setInterval(sendPlayersAction,1000);
+                        interval = setInterval(sendPlayersAction,INTIME);
                         break;
                     case 1:
                         con.setIDName(data.data);
