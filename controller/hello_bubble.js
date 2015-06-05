@@ -44,13 +44,13 @@ function eat(){
                     if(User_queue[i].r > User_queue[j].r) {
                         if (distance(User_queue[i], User_queue[j]) < User_queue[i].r - User_queue[j].r) {
                             checkstate(User_queue[i], User_queue[j]);
-                            User_queue[j].eaten = true;
+                            Userlength--;
                         }
                     }
                     else if(User_queue[i].r < User_queue[j].r) {
                         if (distance(User_queue[j], User_queue[i]) < User_queue[j].r - User_queue[i].r) {
                             checkstate(User_queue[j], User_queue[i]);
-                            User_queue.live = false;
+                            Userlength--;
                         }
                     }
                 }
@@ -173,7 +173,10 @@ function resetBubble(Bubble)
 exports.setIDName = function (data){
     for(var i = 0; i<User_queue.length; i++)
         if(data.id == User_queue[i].id)
+        {
             User_queue[i].name = data.name;
+            User_queue[i].start = true;
+        }
 }
 
 exports.setIDEndGame = function (data){
@@ -188,19 +191,15 @@ exports.setIDAction = function (data)
 {
     for(var i = 0; i<User_queue[i]; i++)
     {
-        if(data.id == User_queue[i].id && data.keydown)
+        if(data.id == User_queue[i].id)
         {
             User_queue[i].vecx = data.directionx;
             User_queue[i].vecy = data.directiony;
+            if(data.keydown == true)
+            	User_queue[i].dividecount++;
         }
-    }
-}
-
-function checkSplite()
-{
-    for(var i = 0; i<User_queue.length; i++)
-    {
-
+        if(User_queue[i].dividecount != 0)
+        	splite(User_queue[i]);
     }
 }
 
@@ -213,8 +212,6 @@ exports.setIDQuitGame = function (data)
 
 exports.getIDMapAction = function (data)
 {
-    //是否分裂
-    checkSplite();
     //更新行为
     move();
     //检查是否被吃
