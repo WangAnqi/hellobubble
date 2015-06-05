@@ -230,7 +230,7 @@ exports.getIDMapAction = function (data)
     	var temp = {"id":-1,"x":randomBubble_queue[i].x,"y":randomBubble_queue[i].y,"size":randomBubble_queue[i].r,"type":randomBubble_queue[i].type,"name":randomBubble_queue[i].name}
         map.push(temp);
     }
-    for(var i = 0; i<User_queue[i]; i++) {
+    for(var i = 0; i<User_queue.length; i++) {
         if (data.id == User_queue[i].id) {
             if (User_queue[i].dividecount == 0) {
                 result = {"myx":User_queue[i].x,"myy":User_queue[i].y,"mysize":User_queue[i].r,"id":User_queue[i].id, "live":User_queue[i].eaten, "map": map};
