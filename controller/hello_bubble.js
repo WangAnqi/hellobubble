@@ -110,7 +110,7 @@ function splite(Bubble){
 }
 
 //建立小球，返回ID
-function getID(length){
+exports.getID = function (length){
     User_queue[length] = new Object();
     User_queue[length].id = "user" + length;
     User_queue[length].x = Math.floor(Math.random()*1000);
@@ -174,7 +174,7 @@ function setIDName(Bubble, data){
         Bubble.name = data.name;
 }
 
-function setIDEndGame(data){
+exports.setIDEndGame = function (data){
     for(var i = 0; i<User_queue[i]; i++)
     {
         if(data.id == User_queue[i].id)
@@ -182,7 +182,7 @@ function setIDEndGame(data){
     }
 }
 
-function setIDAction(data)
+exports.setIDAction = function (data)
 {
     for(var i = 0; i<User_queue[i]; i++)
     {
@@ -202,14 +202,14 @@ function checkSplite()
     }
 }
 
-function setIDQuitGame(data)
+exports.setIDQuitGame = function (data)
 {
     for(var i = 0; i<User_queue.length; i++)
         if(data.id == User_queue[i].id)
             User_queue[i].start = false;
 }
 
-function getIDMapAction(data)
+exports.getIDMapAction = function (data)
 {
     //是否分裂
     checkSplite();
