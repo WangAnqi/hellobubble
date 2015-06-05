@@ -129,8 +129,8 @@ exports.getID = function (length){
     User_queue[length].type = 1;
     User_queue[length].restart = false;
     Userlength++;
-    var result = '{' + '"id"' + User_queue[length].id + '}';
-    return JSON.stringify(result);
+    var result = { "id" : User_queue[length].id};
+    return result;
 }
 
 function spliteBubble(pos, x, y, r, id, vecx, vecy, v, dc, score, allscore)
