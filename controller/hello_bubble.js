@@ -26,30 +26,37 @@ function randomBubble(){
 function eat(){
     for(var i = 0; i< User_queue.length; i++)
     {
-        for(var k = 0; k<randomBubble_queue.length; k++)
+        if(User_queue[i].start == true)
         {
+            for(var k = 0; k<randomBubble_queue.length; k++)
+            {
 
-            if(distance(User_queue[i],randomBubble_queue[k]) <= User_queue[i].r + randomBubble_queue[k]) {
-                checkstate(User_queue[i], randomBubble_queue[k]);
-                randomBubble_queue.splice(k, 1);
-                Bubblelength--;
-            }
-        }
-        for(var j = i+1; j<User_queue.length; j++)
-        {
-            if(User_queue[i].r > User_queue[j].r) {
-                if (distance(User_queue[i], User_queue[j]) < User_queue[i].r - User_queue[j].r) {
-                    checkstate(User_queue[i], User_queue[j]);
-                    User_queue[j].eaten = true;
+                if(distance(User_queue[i],randomBubble_queue[k]) <= User_queue[i].r + randomBubble_queue[k]) {
+                    checkstate(User_queue[i], randomBubble_queue[k]);
+                    randomBubble_queue.splice(k, 1);
+                    Bubblelength--;
                 }
             }
-            else if(User_queue[i].r < User_queue[j].r) {
-                if (distance(User_queue[j], User_queue[i]) < User_queue[j].r - User_queue[i].r) {
-                    checkstate(User_queue[j], User_queue[i]);
-                    User_queue.live = false;
+            for(var j = i+1; j<User_queue.length; j++)
+            {
+                if(User_queue[j].start == true)
+                {
+                    if(User_queue[i].r > User_queue[j].r) {
+                        if (distance(User_queue[i], User_queue[j]) < User_queue[i].r - User_queue[j].r) {
+                            checkstate(User_queue[i], User_queue[j]);
+                            User_queue[j].eaten = true;
+                        }
+                    }
+                    else if(User_queue[i].r < User_queue[j].r) {
+                        if (distance(User_queue[j], User_queue[i]) < User_queue[j].r - User_queue[i].r) {
+                            checkstate(User_queue[j], User_queue[i]);
+                            User_queue.live = false;
+                        }
+                    }
                 }
             }
         }
+
     }
 }
 
@@ -58,10 +65,13 @@ function move()
 {
     for(var i = 0; i < User_queue.length; i++)
     {
-        var sx = User_queue[i].vecx - User_queue[i].x;
-        var sy = User_queue[i].vecy - User_queue[i].y;
-        User_queue[i].x += freq * User_queue[i].v * (sx / Math.sqrt(sx*sx + sy*sy));
-        User_queue[i].y += freq * User_queue[i].v * (sy / Math.sqrt(sx*sx + sy*sy));
+        if(User_queue[i].start == true)
+        {
+            var sx = User_queue[i].vecx - User_queue[i].x;
+            var sy = User_queue[i].vecy - User_queue[i].y;
+            User_queue[i].x += freq * User_queue[i].v * (sx / Math.sqrt(sx*sx + sy*sy));
+            User_queue[i].y += freq * User_queue[i].v * (sy / Math.sqrt(sx*sx + sy*sy));
+        }
     }
 }
 
@@ -96,10 +106,10 @@ function splite(Bubble){
     var sy = Bubble.vecy - Bubble.y;
     var x = Bubble.x + 2*Bubble.r * (sx / Math.sqrt(sx*sx + sy*sy));
     var y = Bubble.y + 2*Bubble.r * (sy / Math.sqrt(sx*sx + sy*sy));
-    addBubble(User_queue.length, x, y, Bubble.id, Bubble.vecx, Bubble.vecy, speed*3, Bubble.dividecount, score,Bubble.allscore);
+    spliteBubble(User_queue.length, x, y, Bubble.id, Bubble.vecx, Bubble.vecy, speed*3, Bubble.dividecount, score,Bubble.allscore);
 }
 
-//添加bubble
+//添加bubble,也就是getID
 function addBubble(length){
     User_queue[length] = new Object();
     User_queue[length].id = "user" + length;
@@ -110,16 +120,18 @@ function addBubble(length){
     User_queue[length].vecx = 0;
     User_queue[length].vecy = 0;
     User_queue[length].eaten = false;
-    User_queue[length].allscore = allscore;
+    User_queue[length].allscore = 0;
     User_queue[length].score = 0;
     User_queue[length].dividecount = 0;
     User_queue[length].name = "string";
     User_queue[length].finish = false;
     User_queue[length].start = false;
     User_queue[length].type = 1;
+    User_queue[length].restart = false;
+    return User_queue[length].id;
 }
 
-function addBubble(pos, x, y, r, id, vecx, vecy, v, dc, score)
+function spliteBubble(pos, x, y, r, id, vecx, vecy, v, dc, score, allscore)
 {
     User_queue[pos] = new Object();
     User_queue[pos].id = id;
@@ -130,36 +142,127 @@ function addBubble(pos, x, y, r, id, vecx, vecy, v, dc, score)
     User_queue[pos].vecx = vecx;
     User_queue[pos].vecy = vecy;
     User_queue[pos].eaten = false;
-    User_queue[pos].allscore = 0;
+    User_queue[pos].allscore = allscore;
     User_queue[pos].score = score;
     User_queue[pos].dividecount = dc;
     User_queue[pos].name = "string";
     User_queue[pos].finish = false;
     User_queue[pos].type = 1;
+    User_queue[pos].restart = false;
 }
+
+function resetBubble(Bubble)
+{
+    Bubble.r = 20;
+    Bubble.v = 4000 / (Bubble.r * Bubble.r);
+    Bubble.vecx = 0;
+    Bubble.vecy = 0;
+    Bubble.eaten = false;
+    Bubble.allscore = 0;
+    Bubble.score = 0;
+    Bubble.dividecount = 0;
+    Bubble.name = "string";
+    Bubble.finish = false;
+    Bubble.start = false;
+    Bubble.type = 1;
+    Bubble.restart = true;
+}
+
+function setIDName(Bubble, data){
+    if(data.id == Bubble.id)
+        Bubble.name = data.name;
+}
+
+function setIDEndGame(data){
+    for(var i = 0; i<User_queue[i]; i++)
+    {
+        if(data.id == User_queue[i].id)
+            User_queue.splice(i, 1);
+    }
+}
+
+function setIDAction(data)
+{
+    for(var i = 0; i<User_queue[i]; i++)
+    {
+        if(data.id == User_queue[i].id &&　data.keydown)
+        {
+            User_queue[i].vecx = data.directionx;
+            User_queue[i].vecy = data.directiony;
+        }
+    }
+}
+
+function checkSplite()
+{
+    for(var i = 0; i<User_queue.length; i++)
+    {
+
+    }
+}
+
+function setIDQuitGame(data)
+{
+    for(var i = 0; i<User_queue.length; i++)
+        if(data.id == User_queue[i].id)
+            User_queue[i].start = false;
+}
+
+function getIDMapAction(data)
+{
+    var user = new String();
+    var map = new String();
+    for(var i = 0; i<User_queue[i]; i++)
+    {
+        if(User_queue[i].dividecount == 0)
+        {
+            if(data.id == User_queue[i].id)
+            {
+                user += '"myx:"' + User_queue[i].x + ',' + '"myy":' + User_queue[i].y + ','
+                         + '"mysize:"' + User_queue[i].r + ',' + '"id":' + User_queue[i].id + ','
+                         + '"live":' + User_queue[i].eaten + ',' + '"map":' + '}';
+            }
+        }
+        map += '{'+ '"id":' + User_queue[i].id + ',' + '"x"' + User_queue[i].x + '"y":' + User_queue[i].y + ',' +
+            '"size"'+ User_queue[i].r + ',' + '"type":' + User_queue[i].type + ',' + '"name"' + User_queue[i].name + '}';
+    }
+    for(var i = 0; i<randomBubble_queue.length; i++)
+    {
+        map += '{'+ '"id":' + '-1' + ',' + '"x"' + randomBubble_queue.x + '"y":' + randomBubble_queue.y + ',' +
+            '"size"'+ randomBubble_queue.r + ',' + '"type":' + randomBubble_queue.type + ',' + '"name"' + randomBubble_queue.name + '}';
+    }
+    var result = '{' + user + '[' + map + ']' + '}';
+    var jsonText = JSON.stringify(result);
+    return jsonText;
+}
+
 //初始化用户
 function initUser(){
     //新用户出现
     if(start) {
+        addBubble(Userlength);
+        setIDName(User_queue[Userlength]);
         Userlength++;
-        addBubble(Userlength - 1);
     }
     if(Userlength > 0) {
-        //某用户退出,或者分裂
-        for (var i = 0; i < User_queue.length; i++) {
-            if (User_queue[i].finish)
-                User_queue.splice(i, 1);
-            if(User_queue[i].dividecount != 0)
-                splite(User_queue[i]);
-        }
+        //某用户退出
+        setIDEndGame(data);
+        //是否退出/死亡
+        setIDQuitGame(data);
+        //设置鼠标方向
+        setIDAction(data);
+        //是否分裂
+        checkSplite();
         //更新行为
         move();
         //检查是否被吃
         eat();
         //检查是否有需要重新开始的用户
         restart();
+        //返回信息
+        return(getIDMapAction(data));
     }
-    console.log(User_queue[Userlength-1]);
+    //console.log(User_queue[Userlength-1]);
 }
 
 function restart()
@@ -168,17 +271,26 @@ function restart()
     {
         if(User_queue[i].dividecount == 0)
         {
-            if(User_queue[i].eaten){}
+            if(User_queue[i].eaten){
+                User_queue[i].restart = true;
+            }
         }
         else
         {
             var live = Math.pow(2, User_queue[i].dividecount);
-            for(var j = 0; j<User_queue.length && User_queue[j].id == User_queue[i].id; j++)
+            for(var j = 0; j<User_queue.length; j++)
             {
-                if(User_queue[j].eaten)
+                if(User_queue[j].eaten && User_queue[j].id == User_queue[i].id)
                     live--;
             }
-            if(live == 0){}
+            if(live == 0){
+                for(var j = i+1; j<User_queue; i++)
+                {
+                    if(User_queue[j].id == User_queue[i].id)
+                        User_queue.splice(j,1);
+                }
+                resetBubble(User_queue[i]);
+            }//未完成
         }
     }
 }
