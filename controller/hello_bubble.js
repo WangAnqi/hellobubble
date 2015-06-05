@@ -215,9 +215,30 @@ function getIDMapAction(data)
     for(var i = 0; i<User_queue[i]; i++) {
         if (data.id == User_queue[i].id) {
             if (User_queue[i].dividecount == 0) {
-                user += '"myx:"' + User_queue[i].x + ',' + '"myy":' + User_queue[i].y + ','
-                    + '"mysize:"' + User_queue[i].r + ',' + '"id":' + User_queue[i].id + ','
-                    + '"live":' + User_queue[i].eaten + ',' + '"map":' + '}';
+                user += '"myx":' + User_queue[i].x + ',' + '"myy":' + User_queue[i].y + ','
+                    + '"mysize":' + User_queue[i].r + ',' + '"id":' + User_queue[i].id + ','
+                    + '"live":' + User_queue[i].eaten + ',' + '"map":';
+                break;
+            }
+            else
+            {
+                var count = 0;
+                var xbar = 0;
+                var ybar = 0;
+                for(var j = i; i<User_queue.length; j++)
+                {
+                    if(User_queue[j].id == User_queue[i].id)
+                    {
+                        count++;
+                        xbar += User_queue[j].x;
+                        ybar += User_queue[j].y;
+                    }
+                }
+                xbar /= count;
+                ybar /= count;
+                user += '"myx":' + xbar + ',' + '"myy":' + ybar + ','
+                    + '"mysize":' + User_queue[i].r + ',' + '"id":' + User_queue[i].id + ','
+                    + '"live":' + User_queue[i].eaten + ',' + '"map":';
                 break;
             }
         }
@@ -297,5 +318,6 @@ function restart()
         }
     }
 }
+
 
 
