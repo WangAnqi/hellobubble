@@ -212,24 +212,27 @@ function getIDMapAction(data)
 {
     var user = new String();
     var map = new String();
-    for(var i = 0; i<User_queue[i]; i++)
-    {
-        if(User_queue[i].dividecount == 0)
-        {
-            if(data.id == User_queue[i].id)
-            {
+    for(var i = 0; i<User_queue[i]; i++) {
+        if (data.id == User_queue[i].id) {
+            if (User_queue[i].dividecount == 0) {
                 user += '"myx:"' + User_queue[i].x + ',' + '"myy":' + User_queue[i].y + ','
-                         + '"mysize:"' + User_queue[i].r + ',' + '"id":' + User_queue[i].id + ','
-                         + '"live":' + User_queue[i].eaten + ',' + '"map":' + '}';
+                    + '"mysize:"' + User_queue[i].r + ',' + '"id":' + User_queue[i].id + ','
+                    + '"live":' + User_queue[i].eaten + ',' + '"map":' + '}';
+                break;
             }
         }
-        map += '{'+ '"id":' + User_queue[i].id + ',' + '"x"' + User_queue[i].x + '"y":' + User_queue[i].y + ',' +
-            '"size"'+ User_queue[i].r + ',' + '"type":' + User_queue[i].type + ',' + '"name"' + User_queue[i].name + '}';
+    }
+    for(var i = 0; i<User_queue.length; i++)
+    {
+        map += '{'+ '"id":' + User_queue[i].id + ',' + '"x":' + User_queue[i].x + ','+ '"y":' + User_queue[i].y + ',' +
+            '"size":'+ User_queue[i].r + ',' + '"type":' + User_queue[i].type + ',' + '"name"' + User_queue[i].name + '}'+ ',';
     }
     for(var i = 0; i<randomBubble_queue.length; i++)
     {
-        map += '{'+ '"id":' + '-1' + ',' + '"x"' + randomBubble_queue.x + '"y":' + randomBubble_queue.y + ',' +
-            '"size"'+ randomBubble_queue.r + ',' + '"type":' + randomBubble_queue.type + ',' + '"name"' + randomBubble_queue.name + '}';
+        map += '{'+ '"id":' + '-1' + ',' + '"x":' + randomBubble_queue.x + ','+ '"y":' + randomBubble_queue.y + ',' +
+            '"size":'+ randomBubble_queue.r + ',' + '"type":' + randomBubble_queue.type + ',' + '"name"' + randomBubble_queue.name + '}';
+        if(i != randomBubble_queue.length - 1)
+            map += ',';
     }
     var result = '{' + user + '[' + map + ']' + '}';
     var jsonText = JSON.stringify(result);
