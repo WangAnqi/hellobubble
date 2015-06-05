@@ -221,14 +221,22 @@ exports.getIDMapAction = function (data)
     eat();
     //检查是否有需要重新开始的用户
     restart();
-    var user = new String();
-    var map = new String();
+    var result = {};
+    var map = [];
+    for(var i = 0; i<User_queue.length; i++)
+    {
+    	var temp = {"id":User_queue[i].id,"x":User_queue[i].x,"y":User_queue[i].y,"size":User_queue[i].r,"type":User_queue[i].type,"name":User_queue[i].name};
+        map.push(temp) ;
+    }
+    for(var i = 0; i<randomBubble_queue.length; i++)
+    {
+    	var temp = {"id":-1,"x":randomBubble_queue[i].x,"y":randomBubble_queue[i].y,"size":randomBubble_queue[i].r,"type":randomBubble_queue[i].type,"name":randomBubble_queue[i].name}
+        map.push(temp);
+    }
     for(var i = 0; i<User_queue[i]; i++) {
         if (data.id == User_queue[i].id) {
             if (User_queue[i].dividecount == 0) {
-                user += '"myx":' + User_queue[i].x + ',' + '"myy":' + User_queue[i].y + ','
-                    + '"mysize":' + User_queue[i].r + ',' + '"id":' + User_queue[i].id + ','
-                    + '"live":' + User_queue[i].eaten + ',' + '"map":';
+                result = {"myx":User_queue[i].x,"myy":User_queue[i].y,"mysize":User_queue[i].r,"id":User_queue[i].id, "live":User_queue[i].eaten, "map": map};
                 break;
             }
             else
@@ -247,28 +255,12 @@ exports.getIDMapAction = function (data)
                 }
                 xbar /= count;
                 ybar /= count;
-                user += '"myx":' + xbar + ',' + '"myy":' + ybar + ','
-                    + '"mysize":' + User_queue[i].r + ',' + '"id":' + User_queue[i].id + ','
-                    + '"live":' + User_queue[i].eaten + ',' + '"map":';
+                result = {"myx":xbar,"myy":ybar,"mysize":User_queue[i].allscore,"id":User_queue[i].id, "live":User_queue[i].eaten, "map": map};
                 break;
             }
         }
-    }
-    for(var i = 0; i<User_queue.length; i++)
-    {
-        map += '{'+ '"id":' + User_queue[i].id + ',' + '"x":' + User_queue[i].x + ','+ '"y":' + User_queue[i].y + ',' +
-            '"size":'+ User_queue[i].r + ',' + '"type":' + User_queue[i].type + ',' + '"name"' + User_queue[i].name + '}'+ ',';
-    }
-    for(var i = 0; i<randomBubble_queue.length; i++)
-    {
-        map += '{'+ '"id":' + '-1' + ',' + '"x":' + randomBubble_queue.x + ','+ '"y":' + randomBubble_queue.y + ',' +
-            '"size":'+ randomBubble_queue.r + ',' + '"type":' + randomBubble_queue.type + ',' + '"name"' + randomBubble_queue.name + '}';
-        if(i != randomBubble_queue.length - 1)
-            map += ',';
-    }
-    var result = '{' + user + '[' + map + ']' + '}';
-    var jsonText = JSON.stringify(result);
-    return jsonText;
+    } 
+    return result;
 }
 
 function restart()
