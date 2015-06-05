@@ -298,11 +298,4 @@ function restart()
     }
 }
 
-//开启服务器
-function begin()
-{
-    //产生bubble
-    setInterval("randomBubble()", 20*1000);
-    //初始化用户
-    setInterval("initUser()", 1000);
-}
+
