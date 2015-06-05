@@ -109,8 +109,8 @@ function splite(Bubble){
     spliteBubble(User_queue.length, x, y, Bubble.id, Bubble.vecx, Bubble.vecy, speed*3, Bubble.dividecount, score,Bubble.allscore);
 }
 
-//添加bubble,也就是getID
-function addBubble(length){
+//建立小球，返回ID
+function getID(length){
     User_queue[length] = new Object();
     User_queue[length].id = "user" + length;
     User_queue[length].x = Math.floor(Math.random()*1000);
@@ -128,6 +128,7 @@ function addBubble(length){
     User_queue[length].start = false;
     User_queue[length].type = 1;
     User_queue[length].restart = false;
+    Userlength++;
     return User_queue[length].id;
 }
 
@@ -210,6 +211,14 @@ function setIDQuitGame(data)
 
 function getIDMapAction(data)
 {
+    //是否分裂
+    checkSplite();
+    //更新行为
+    move();
+    //检查是否被吃
+    eat();
+    //检查是否有需要重新开始的用户
+    restart();
     var user = new String();
     var map = new String();
     for(var i = 0; i<User_queue[i]; i++) {
@@ -260,35 +269,6 @@ function getIDMapAction(data)
     return jsonText;
 }
 
-//初始化用户
-function initUser(){
-    //新用户出现
-    if(start) {
-        addBubble(Userlength);
-        setIDName(User_queue[Userlength]);
-        Userlength++;
-    }
-    if(Userlength > 0) {
-        //某用户退出
-        setIDEndGame(data);
-        //是否退出/死亡
-        setIDQuitGame(data);
-        //设置鼠标方向
-        setIDAction(data);
-        //是否分裂
-        checkSplite();
-        //更新行为
-        move();
-        //检查是否被吃
-        eat();
-        //检查是否有需要重新开始的用户
-        restart();
-        //返回信息
-        return(getIDMapAction(data));
-    }
-    //console.log(User_queue[Userlength-1]);
-}
-
 function restart()
 {
     for(var i = 0; i< User_queue.length; i++)
@@ -308,7 +288,7 @@ function restart()
                     live--;
             }
             if(live == 0){
-                for(var j = i+1; j<User_queue; i++)
+                for(var j = i+1; j<User_queue; j++)
                 {
                     if(User_queue[j].id == User_queue[i].id)
                         User_queue.splice(j,1);
@@ -318,6 +298,3 @@ function restart()
         }
     }
 }
-
-
-
