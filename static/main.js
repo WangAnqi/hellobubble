@@ -53,7 +53,7 @@
       
     function clickplay(){
         myname = $("#nick")[0].value;
-        ws.send("{'type':0,'id':"+myid+",'data':{'name':"+myname+"}}"); 
+        ws.send('{"type":1,"id":'+myid+',"data":{"name":'+myname+'}}'); 
         $("#overlays").hide();
         myname = $("#nick")[0].value;
         team1.name = myname;
