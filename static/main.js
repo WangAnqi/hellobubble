@@ -4,7 +4,7 @@
         myid=0;
         ws=new WebSocket("ws://183.173.38.97:8000/");
         ws.onopen=function(e){
-            ws.send("{'type':0}"); 
+            ws.send('{"type":0}'); 
             console.log("成功");};
             
         ws.onmessage = function(e){
