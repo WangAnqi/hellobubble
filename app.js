@@ -7,7 +7,7 @@ var Server = net.createServer();
 Server.on("connection",function(o){//o: class net.socket
     var key;
     var interval;
-
+    var player_id;
     o.on('data',function(e){
         if(!key){
             //握手
@@ -22,42 +22,41 @@ Server.on("connection",function(o){//o: class net.socket
             
             //console.log(o.remoteAddress);
             //console.log(o.remotePort);
-
-            
         }else{
         	
         	  var packet = decodeDataFrame(e);
         	  
         	  if(packet.Opcode==8){
+                con.setIDEndGame(player_id);
                 o.end(); //断开连接
                 console.log("Close the ws...");
             }
             else{
-                console.log(packet);
+                //console.log(packet);
                 strdata = packet.PayloadData;
                 data = JSON.parse(strdata);
                 //console.log(data);
                 //sendTextData(o,data);
-                console.log(data.type);
+                //console.log(data.type);
                 switch (data.type){
                     case 0:
-                        id = con.getID();
+                        player_id = con.getID();
                         //timer
-                        console.log(id);
-                        intervals = setInterval(sendPlayersAction,1000,id);
+                        console.log(player_id);
+                        interval = setInterval(sendPlayersAction,1000);
+                        break;
                     case 1:
-                        var playerName = data.data;
-                    break;
+                        con.setIDName(data.data);
+                        console.log(data.data);
+                        break;
                     case 2:
-                        var playerAction = data.data; 
-                    break;
+                        con.setIDAction(data.data);
+                        console.log(data.data);
+                        break;
                     case 3:
-                        var player = data.data;
-                        //delete the player
-    
-                        o.end(); //断开连接
-                        console.log("Close the ws...");
-                    break;
+                        con.setIDQuitGame(data.data);
+                        console.log(data.data);
+                        break;
                     default:
                 }    
             }
@@ -65,16 +64,16 @@ Server.on("connection",function(o){//o: class net.socket
     });
     
     o.on('close',function(e){
-    	clearInterval(intervals);
+    	clearInterval(interval);
     	console.log("Close interval send data")
     });
 
-    function sendPlayersAction(id){
+    function sendPlayersAction(){
 	    if(key){
-            actions = con.getIDMapAction(id.id);
-            console.log(actions);
+            actions = con.getIDMapAction(player_id);
+            //console.log(actions);
             sendTextData(o,JSON.stringify(actions));
-            console.log("Come on!");
+            //console.log("Come on!");
 	    }
     }
     
