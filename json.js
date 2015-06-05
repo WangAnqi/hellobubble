@@ -4,7 +4,7 @@
 //start game
 {"type":1, "data":{"id":10, "name":"dogedoge"}}
 //bubble's action
-{"type":2, "data":{"id":510, "direction":"?","mouse":"w"}}
+{"type":2, "data":{"id":510, "directionx":10,"directionx":200,"keydown":true}}
 //close the game
 {"type":3, "data":{"id":203}}
 
