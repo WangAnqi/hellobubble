@@ -169,7 +169,7 @@ function resetBubble(Bubble)
     Bubble.restart = true;
 }
 
-function setIDName(data){
+exports.setIDName = function (data){
     for(var i = 0; i<User_queue.length; i++)
         if(data.id == User_queue[i].id)
             User_queue[i].name = data.name;
@@ -187,7 +187,7 @@ exports.setIDAction = function (data)
 {
     for(var i = 0; i<User_queue[i]; i++)
     {
-        if(data.id == User_queue[i].id &&¡¡data.keydown)
+        if(data.id == User_queue[i].id && data.keydown)
         {
             User_queue[i].vecx = data.directionx;
             User_queue[i].vecy = data.directiony;

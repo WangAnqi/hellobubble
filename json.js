@@ -4,7 +4,7 @@
 //start game
 {"type":1, "data":{"id":10, "name":"dogedoge"}}
 //bubble's action
-{"type":2, "data":{"id":510, "directionx":10,"directionx":200,"keydown":true}}
+{"type":2, "data":{"id":510, "directionx":10,"directiony":200,"keydown":true}}
 //close the game
 {"type":3, "data":{"id":203}}
 
@@ -15,7 +15,7 @@
 
 //net --- server
 /*
-getID() ---return: a new id
+getID() ---return: a new id {"id":10}
 setIDName(data) ---set id's name---data = {"id":10, "name":"dogedoge"}
 setIDAction(data) --- set id's action --- data = {"id":510, "direction":"?","mouse":"w"}
 setIDQuitGame(data) --- user temporarily quit the game, not end game --- data = {"id":203}
