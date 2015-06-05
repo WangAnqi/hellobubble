@@ -48,15 +48,12 @@
         win.onresize = myresize;
         myresize();
         $("#playBtn")[0].onclick=clickplay;
-        setInterval(paint, 1E3 / 60);
+        //setInterval(paint, 1E3 / 60);
     }
       
     function clickplay(){
-        myname = $("#nick")[0].value;
-        if(!myname){
-             console.log(1);
-            myname='""';
-        }
+        myname = '"'+$("#nick")[0].value+'"';
+        console.log(myname);
         ws.send('{"type":1,"id":'+myid+',"data":{"name":'+myname+'}}'); 
         $("#overlays").hide();
         myname = $("#nick")[0].value;
@@ -82,6 +79,8 @@
         myid = msg.id;
         mysize = msg.mysize;
         mymap = msg.map
+        smallcircle=[];
+        bigcircle=[];
         for(i=0;i<mymap.length;i++)
         {
             play = Object.create(circle);
@@ -93,6 +92,8 @@
             if(play.type==1){smallcircle.push(play);}
             else{bigcircle.push(play); } 
         }
+        console.log(bigcircle)
+        paint();
     }
     
     function paint(){
@@ -140,6 +141,7 @@
         for(i=0;i<smallcircle.length;i++) {smallcircle[i].draw();}
         for(i=0;i<bigcircle.length;i++) {bigcircle[i].draw();}
         myContext.restore();
+        console.log(1);
     }
     
     var circle = {
