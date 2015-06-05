@@ -1,13 +1,13 @@
 exports.getID = function(){
-	 newID = {"id":200};
-     return JSON.stringify(newID);
+	newID = {"id":200};
+    return newID;
 }
 
 exports.setIDName = function(data){
-
+    
 }
 
-exports.setIDAction = function(datad){
+exports.setIDAction = function(data){
 
 }
 

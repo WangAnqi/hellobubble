@@ -23,8 +23,7 @@ Server.on("connection",function(o){//o: class net.socket
             //console.log(o.remoteAddress);
             //console.log(o.remotePort);
 
-            //timer
-            intervals = setInterval(sendPlayersAction,1000);
+            
         }else{
         	
         	  var packet = decodeDataFrame(e);
@@ -42,7 +41,9 @@ Server.on("connection",function(o){//o: class net.socket
                 console.log(data.type);
                 switch (data.type){
                     case 0:
-                        con.getID();
+                        id = con.getID();
+                        //timer
+                        intervals = setInterval(sendPlayersAction,1000);
                     case 1:
                         var playerName = data.data;
                     break;
