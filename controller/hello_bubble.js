@@ -112,11 +112,11 @@ function splite(Bubble){
 //建立小球，返回ID
 exports.getID = function (){
     User_queue[Userlength] = new Object();
-    User_queue[Userlength].id = "user" + length;
+    User_queue[Userlength].id = "user" + Userlength;
     User_queue[Userlength].x = Math.floor(Math.random()*1000);
     User_queue[Userlength].y = Math.floor(Math.random()*1000);
     User_queue[Userlength].r = 20;
-    User_queue[Userlength].v = 4000 / (User_queue[length].r * User_queue[length].r);
+    User_queue[Userlength].v = 4000 / (User_queue[Userlength].r * User_queue[Userlength].r);
     User_queue[Userlength].vecx = 0;
     User_queue[Userlength].vecy = 0;
     User_queue[Userlength].eaten = false;
