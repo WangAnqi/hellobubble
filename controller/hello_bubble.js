@@ -110,26 +110,26 @@ function splite(Bubble){
 }
 
 //建立小球，返回ID
-exports.getID = function (length){
-    User_queue[length] = new Object();
-    User_queue[length].id = "user" + length;
-    User_queue[length].x = Math.floor(Math.random()*1000);
-    User_queue[length].y = Math.floor(Math.random()*1000);
-    User_queue[length].r = 20;
-    User_queue[length].v = 4000 / (User_queue[length].r * User_queue[length].r);
-    User_queue[length].vecx = 0;
-    User_queue[length].vecy = 0;
-    User_queue[length].eaten = false;
-    User_queue[length].allscore = 0;
-    User_queue[length].score = 0;
-    User_queue[length].dividecount = 0;
-    User_queue[length].name = "string";
-    User_queue[length].finish = false;
-    User_queue[length].start = false;
-    User_queue[length].type = 1;
-    User_queue[length].restart = false;
+exports.getID = function (){
+    User_queue[Userlength] = new Object();
+    User_queue[Userlength].id = "user" + Userlength;
+    User_queue[Userlength].x = Math.floor(Math.random()*1000);
+    User_queue[Userlength].y = Math.floor(Math.random()*1000);
+    User_queue[Userlength].r = 20;
+    User_queue[Userlength].v = 4000 / (User_queue[Userlength].r * User_queue[Userlength].r);
+    User_queue[Userlength].vecx = 0;
+    User_queue[Userlength].vecy = 0;
+    User_queue[Userlength].eaten = false;
+    User_queue[Userlength].allscore = 0;
+    User_queue[Userlength].score = 0;
+    User_queue[Userlength].dividecount = 0;
+    User_queue[Userlength].name = "string";
+    User_queue[Userlength].finish = false;
+    User_queue[Userlength].start = false;
+    User_queue[Userlength].type = 1;
+    User_queue[Userlength].restart = false;
     Userlength++;
-    var result = { "id" : User_queue[length].id };
+    var result = { "id" : User_queue[Userlength].id };
     return result;
 }
 
