@@ -169,9 +169,10 @@ function resetBubble(Bubble)
     Bubble.restart = true;
 }
 
-function setIDName(Bubble, data){
-    if(data.id == Bubble.id)
-        Bubble.name = data.name;
+function setIDName(data){
+    for(var i = 0; i<User_queue.length; i++)
+        if(data.id == User_queue[i].id)
+            User_queue[i].name = data.name;
 }
 
 exports.setIDEndGame = function (data){
