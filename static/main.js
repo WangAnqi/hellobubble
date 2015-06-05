@@ -53,6 +53,10 @@
       
     function clickplay(){
         myname = $("#nick")[0].value;
+        if(!myname){
+             console.log(1);
+            myname='""';
+        }
         ws.send('{"type":1,"id":'+myid+',"data":{"name":'+myname+'}}'); 
         $("#overlays").hide();
         myname = $("#nick")[0].value;
@@ -94,9 +98,10 @@
     function paint(){
         //myy++;
         
-        mysize=team1.size;
+       /* mysize=team1.size;*/
         myscal=0.8-mysize/200*0.2;
-        if(myscal==0){myscal=0.05} 
+        if(myscal==0){myscal=0.05}
+            /*
         if(DirectionX*DirectionX+DirectionY*DirectionY>100)
         {
             team1.x+=25*DirectionX/Math.sqrt(team1.size*(DirectionX*DirectionX+DirectionY*DirectionY));
@@ -107,7 +112,7 @@
         if(team1.x>10000) {team1.x=10000;}
         if(team1.y>10000) {team1.y=10000;}
         myx = team1.x
-        myy = team1.y;
+        myy = team1.y;*/
         
         
         myContext.clearRect(0, 0, winW, winH);
