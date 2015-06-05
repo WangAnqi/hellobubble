@@ -112,7 +112,7 @@ function splite(Bubble){
 //建立小球，返回ID
 exports.getID = function (){
     User_queue[Userlength] = {};
-    User_queue[Userlength].id = "user" + Userlength;
+    User_queue[Userlength].id = Userlength;
     User_queue[Userlength].x = Math.floor(Math.random()*1000);
     User_queue[Userlength].y = Math.floor(Math.random()*1000);
     User_queue[Userlength].r = 20;
