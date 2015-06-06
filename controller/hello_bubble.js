@@ -1,5 +1,5 @@
-var globle_height = 1000;//世界地图的高度
-var globle_width = 1000;//世界地图的宽度
+var globle_height = 10000;//世界地图的高度
+var globle_width = 10000;//世界地图的宽度
 var randomBubble_queue = new Array();//随机生成的bubble
 var User_queue = [];//用户队列
 var freq = 10;//刷新频率
@@ -117,8 +117,8 @@ exports.getID = function (){
     User_queue[Userlength].y = Math.floor(Math.random()*1000);
     User_queue[Userlength].r = 20;
     User_queue[Userlength].v = 4000 / (User_queue[Userlength].r * User_queue[Userlength].r);
-    User_queue[Userlength].vecx = 0;
-    User_queue[Userlength].vecy = 0;
+    User_queue[Userlength].vecx = User_queue[Userlength].x;
+    User_queue[Userlength].vecy = User_queue[Userlength].y;
     User_queue[Userlength].eaten = false;
     User_queue[Userlength].allscore = 0;
     User_queue[Userlength].score = 0;
@@ -171,6 +171,7 @@ function resetBubble(Bubble)
 }
 
 exports.setIDName = function (data){
+	//randomBubble();
     for(var i = 0; i<User_queue.length; i++)
         if(data.id == User_queue[i].id)
         {
@@ -180,7 +181,7 @@ exports.setIDName = function (data){
 }
 
 exports.setIDEndGame = function (data){
-    for(var i = 0; i<User_queue[i]; i++)
+    for(var i = 0; i<User_queue.length; i++)
     {
         if(data.id == User_queue[i].id)
             User_queue.splice(i, 1);
@@ -189,11 +190,12 @@ exports.setIDEndGame = function (data){
 
 exports.setIDAction = function (data)
 {
-    for(var i = 0; i<User_queue[i]; i++)
+    for(var i = 0; i<User_queue.length; i++)
     {
         if(data.id == User_queue[i].id)
         {
             User_queue[i].vecx = data.directionx;
+            console.log("鼠标x：" + User_queue[i].vecx);
             User_queue[i].vecy = data.directiony;
             if(data.keydown == true)
             	User_queue[i].dividecount++;
@@ -223,7 +225,7 @@ exports.getIDMapAction = function (data)
     for(var i = 0; i<User_queue.length; i++)
     {
     	var temp = {"id":User_queue[i].id,"x":User_queue[i].x,"y":User_queue[i].y,"size":User_queue[i].r,"type":User_queue[i].type,"name":User_queue[i].name};
-        map.push(temp) ;
+        map.push(temp);
     }
     for(var i = 0; i<randomBubble_queue.length; i++)
     {
