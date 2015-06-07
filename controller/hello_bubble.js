@@ -1,5 +1,5 @@
-var globle_height = 10000;//世界地图的高度
-var globle_width = 10000;//世界地图的宽度
+var globle_height = 5000;//世界地图的高度
+var globle_width = 5000;//世界地图的宽度
 var randomBubble_queue = new Array();//随机生成的bubble
 var User_queue = new Array();//用户队列
 var freq = 1;//刷新频率
@@ -10,7 +10,7 @@ var start = false;//开始
 exports.Users = User_queue;
 //生成随机的Bubble
 exports.randomBubble = function (){
-    for(var i = Bubblelength; i<100; i++)
+    for(var i = Bubblelength; i<20; i++)
     {
         randomBubble_queue[i] = new Object();
         randomBubble_queue[i].x = Math.floor(Math.random() * globle_width);
@@ -31,7 +31,7 @@ function eat(){
             for(var k = 0; k<randomBubble_queue.length; k++)
             {
 
-                if(distance(User_queue[i],randomBubble_queue[k]) <= User_queue[i].r + randomBubble_queue[k]) {
+                if(distance(User_queue[i],randomBubble_queue[k]) <= User_queue[i].r + randomBubble_queue[k].r) {
                     checkstate(User_queue[i], randomBubble_queue[k]);
                     randomBubble_queue.splice(k, 1);
                     Bubblelength--;
@@ -116,7 +116,7 @@ exports.getID = function (){
     User_queue[Userlength].x = Math.floor(Math.random()*1000);
     User_queue[Userlength].y = Math.floor(Math.random()*1000);
     User_queue[Userlength].r = Math.floor(Math.random()*20 + 10);
-    User_queue[Userlength].v = 4000 / (User_queue[Userlength].r * User_queue[Userlength].r);
+    User_queue[Userlength].v = 16000 / (User_queue[Userlength].r * User_queue[Userlength].r);
     User_queue[Userlength].vecx = User_queue[Userlength].x + 1;
     User_queue[Userlength].vecy = User_queue[Userlength].y + 1;
     User_queue[Userlength].live = false;
