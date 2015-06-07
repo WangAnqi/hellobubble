@@ -137,12 +137,21 @@ function encodeDataFrame(e){
   s.push((e.FIN<<7)+e.Opcode);
   //输入第二个字节，判断它的长度并放入相应的后续长度消息
   //永远不使用掩码
-  if(l<126)s.push(l);
-  else if(l<0x10000)s.push(126,(l&0xFF00)>>2,l&0xFF);
-  else s.push(
-    127, 0,0,0,0, //8字节数据，前4字节一般没用留空
-    (l&0xFF000000)>>6,(l&0xFF0000)>>4,(l&0xFF00)>>2,l&0xFF
-  );
+  if(l<126){
+    s.push(l);
+    console.log("data length"+"<126");
+  }
+  else if(l<0x10000){
+    s.push(126,(l&0xFF00)>>2,l&0xFF);
+    console.log("data length"+"126");
+  }
+  else{
+    s.push(
+      127, (l&0xFF00000000000000)>>14,(l&0xFF000000000000)>>12,(l&0xFF0000000000)>>10,(l&0xFF00000000)>>8, //8字节数据，前4字节一般没用留空
+      (l&0xFF000000)>>6,(l&0xFF0000)>>4,(l&0xFF00)>>2,l&0xFF
+    );
+    console.log("data length"+"127");
+  }
   //返回头部分和数据部分的合并缓冲区
   return Buffer.concat([new Buffer(s),o]);
 }
