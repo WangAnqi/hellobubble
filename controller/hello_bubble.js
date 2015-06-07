@@ -9,7 +9,7 @@ var start = false;//开始
 
 exports.Users = User_queue;
 //生成随机的Bubble
-function randomBubble(){
+exports.randomBubble = function (){
     for(var i = Bubblelength; i<100; i++)
     {
         randomBubble_queue[i] = new Object();

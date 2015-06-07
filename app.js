@@ -4,6 +4,7 @@ var net = require('net');
 var con = require('./controller/hello_bubble');
 var Server = net.createServer();
 var INTIME = 100;
+var RANDOMBUBBLE = 20000;
 
 Server.on("connection",function(o){//o: class net.socket
     var key;
@@ -83,6 +84,7 @@ Server.on("connection",function(o){//o: class net.socket
 });
 Server.listen(8000);
 
+setInterval(con.randomBubble,RANDOMBUBBLE);
 
 
 function sendClose(o,buf){
