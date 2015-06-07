@@ -25,7 +25,7 @@ function randomBubble(){
 function eat(){
     for(var i = 0; i< User_queue.length; i++)
     {
-        if(User_queue[i].start == true)
+        if(User_queue[i].start == true && User_queue[i].live)
         {
             for(var k = 0; k<randomBubble_queue.length; k++)
             {
@@ -38,7 +38,7 @@ function eat(){
             }
             for(var j = i+1; j<User_queue.length; j++)
             {
-                if(User_queue[j].start == true)
+                if(User_queue[j].start == true && User_queue[j].live)
                 {
                     if(User_queue[i].r > User_queue[j].r) {
                         if (distance(User_queue[i], User_queue[j]) < User_queue[i].r - User_queue[j].r) {
@@ -77,7 +77,7 @@ function move()
 //¼ì²ébubble×´Ì¬
 function checkstate(Bubblebig,Bubblesmall)
 {
-    Bubblesmall.eaten = true;
+    Bubblesmall.live = false;
     Bubblebig.r = Math.sqrt(Bubblebig.r*Bubblebig.r + Bubblesmall.r*Bubblesmall.r);
     Bubblebig.v = 4000 / (Bubblebig.r * Bubblebig.r);
     Bubblebig.allscore += Bubblesmall.score;
@@ -118,7 +118,7 @@ exports.getID = function (){
     User_queue[Userlength].v = 4000 / (User_queue[Userlength].r * User_queue[Userlength].r);
     User_queue[Userlength].vecx = User_queue[Userlength].x + 1;
     User_queue[Userlength].vecy = User_queue[Userlength].y + 1;
-    User_queue[Userlength].eaten = false;
+    User_queue[Userlength].live = false;
     User_queue[Userlength].allscore = 0;
     User_queue[Userlength].score = 0;
     User_queue[Userlength].dividecount = 0;
@@ -142,7 +142,7 @@ function spliteBubble(pos, x, y, r, id, vecx, vecy, v, dc, score, allscore)
     User_queue[pos].v = v;
     User_queue[pos].vecx = vecx;
     User_queue[pos].vecy = vecy;
-    User_queue[pos].eaten = false;
+    User_queue[pos].live = false;
     User_queue[pos].allscore = allscore;
     User_queue[pos].score = score;
     User_queue[pos].dividecount = dc;
@@ -158,7 +158,7 @@ function resetBubble(Bubble)
     Bubble.v = 4000 / (Bubble.r * Bubble.r);
     Bubble.vecx = 0;
     Bubble.vecy = 0;
-    Bubble.eaten = false;
+    Bubble.live = false;
     Bubble.allscore = 0;
     Bubble.score = 0;
     Bubble.dividecount = 0;
@@ -176,6 +176,7 @@ exports.setIDName = function (data){
         if(data.id == User_queue[i].id)
             User_queue[i].name = data.name;
             User_queue[i].start = true;
+            User_queue[i].live = true;
         }
 }
 
@@ -221,11 +222,12 @@ exports.getIDMapAction = function (data)
     var result = {};
     var map = [];
     for(var i = 0; i<User_queue.length; i++)
-    {
-    	
+    {	
+    	if(User_queue[i].live)
+    	{
     		var temp = {"id":User_queue[i].id,"x":Math.round(User_queue[i].x),"y":Math.round(User_queue[i].y),"size":Math.round(User_queue[i].r),"type":User_queue[i].type,"name":User_queue[i].name};
-        	map.push(temp);
-        
+       		map.push(temp);
+        }
     }
     for(var i = 0; i<randomBubble_queue.length; i++)
     {
@@ -235,7 +237,7 @@ exports.getIDMapAction = function (data)
     for(var i = 0; i<User_queue.length; i++) {
         if (data.id == User_queue[i].id) {
             if (User_queue[i].dividecount == 0) {
-                result = {"myx":Math.round(User_queue[i].x),"myy":Math.round(User_queue[i].y),"mysize":Math.round(User_queue[i].r),"id":User_queue[i].id, "live":User_queue[i].eaten, "map": map};
+                result = {"myx":Math.round(User_queue[i].x),"myy":Math.round(User_queue[i].y),"mysize":Math.round(User_queue[i].r),"id":User_queue[i].id, "live":User_queue[i].live, "map": map};
                 break;
             }
             else
@@ -254,7 +256,7 @@ exports.getIDMapAction = function (data)
                 }
                 xbar /= count;
                 ybar /= count;
-                result = {"myx":xbar,"myy":ybar,"mysize":User_queue[i].allscore,"id":User_queue[i].id, "live":User_queue[i].eaten, "map": map};
+                result = {"myx":xbar,"myy":ybar,"mysize":User_queue[i].allscore,"id":User_queue[i].id, "live":User_queue[i].live, "map": map};
                 break;
             }
         }
@@ -268,7 +270,7 @@ function restart()
     {
         if(User_queue[i].dividecount == 0)
         {
-            if(User_queue[i].eaten){
+            if(User_queue[i].live){
                 User_queue[i].restart = true;
             }
         }
@@ -277,7 +279,7 @@ function restart()
             var live = Math.pow(2, User_queue[i].dividecount);
             for(var j = 0; j<User_queue.length; j++)
             {
-                if(User_queue[j].eaten && User_queue[j].id == User_queue[i].id)
+                if(User_queue[j].live && User_queue[j].id == User_queue[i].id)
                     live--;
             }
             if(live == 0){
