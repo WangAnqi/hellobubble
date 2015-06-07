@@ -73,7 +73,6 @@
         myname = '"'+$("#nick")[0].value+'"';
         console.log(myname);
         ws.send('{"type":1,"data":{"id":'+myid+',"name":'+myname+'}}'); 
-        $("#overlays").hide();
         myname = $("#nick")[0].value;
         team1.name = myname;
     }  
@@ -105,6 +104,14 @@
         myid = msg.id;
         mysize = msg.mysize;
         mymap = msg.map
+        if(msg.live)
+        {
+            $("#overlays").hide();
+        }
+        else
+        {
+            $("#overlays").show();
+        }
         smallcircle=[];
         bigcircle=[];
         for(i=0;i<mymap.length;i++)
