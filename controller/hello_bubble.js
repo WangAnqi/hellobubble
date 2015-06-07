@@ -114,7 +114,7 @@ exports.getID = function (){
     User_queue[Userlength].id = Userlength;
     User_queue[Userlength].x = Math.floor(Math.random()*1000);
     User_queue[Userlength].y = Math.floor(Math.random()*1000);
-    User_queue[Userlength].r = 20;
+    User_queue[Userlength].r = Math.floor(Math.random()*20 + 10);
     User_queue[Userlength].v = 4000 / (User_queue[Userlength].r * User_queue[Userlength].r);
     User_queue[Userlength].vecx = User_queue[Userlength].x + 1;
     User_queue[Userlength].vecy = User_queue[Userlength].y + 1;
@@ -172,8 +172,8 @@ function resetBubble(Bubble)
 exports.setIDName = function (data){
 	//randomBubble();
     for(var i = 0; i<User_queue.length; i++)
-        if(data.id == User_queue[i].id)
         {
+        if(data.id == User_queue[i].id)
             User_queue[i].name = data.name;
             User_queue[i].start = true;
         }
@@ -222,11 +222,10 @@ exports.getIDMapAction = function (data)
     var map = [];
     for(var i = 0; i<User_queue.length; i++)
     {
-    	if(User_queue[i].start == false)
-    	{
+    	
     		var temp = {"id":User_queue[i].id,"x":Math.round(User_queue[i].x),"y":Math.round(User_queue[i].y),"size":Math.round(User_queue[i].r),"type":User_queue[i].type,"name":User_queue[i].name};
         	map.push(temp);
-        }
+        
     }
     for(var i = 0; i<randomBubble_queue.length; i++)
     {
