@@ -185,7 +185,10 @@ exports.setIDEndGame = function (data){
     for(var i = 0; i<User_queue.length; i++)
     {
         if(data.id == User_queue[i].id)
+        {
             User_queue.splice(i, 1);
+        	Userlength--;
+    	}
     }
 }
 
