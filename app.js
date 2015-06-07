@@ -72,18 +72,20 @@ Server.on("connection",function(o){//o: class net.socket
 
     function sendPlayersAction(){
         if(!(con.Users[player_id.id])) return;
-        try{
+        //try{
             actions = con.getIDMapAction(player_id);
             console.log(actions);
             sendTextData(o,JSON.stringify(actions));
-        }
-        catch(e){
-          console.log(e);
-        }
+        //}
+        //catch(e){
+        //  console.log(e);
+        //}
     }
 });
 Server.listen(8000);
 
+//generate random bubbles
+con.randomBubble();
 setInterval(con.randomBubble,RANDOMBUBBLE);
 
 
