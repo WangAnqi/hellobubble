@@ -224,7 +224,7 @@ exports.getIDMapAction = function (data)
     var map = [];
     for(var i = 0; i<User_queue.length; i++)
     {
-    	var temp = {"id":User_queue[i].id,"x":User_queue[i].x,"y":User_queue[i].y,"size":User_queue[i].r,"type":User_queue[i].type,"name":User_queue[i].name};
+    	var temp = {"id":User_queue[i].id,"x":Math.round(User_queue[i].x),"y":Math.round(User_queue[i].y),"size":Math.round(User_queue[i].r),"type":User_queue[i].type,"name":User_queue[i].name};
         map.push(temp);
     }
     for(var i = 0; i<randomBubble_queue.length; i++)
@@ -235,7 +235,7 @@ exports.getIDMapAction = function (data)
     for(var i = 0; i<User_queue.length; i++) {
         if (data.id == User_queue[i].id) {
             if (User_queue[i].dividecount == 0) {
-                result = {"myx":User_queue[i].x,"myy":User_queue[i].y,"mysize":User_queue[i].r,"id":User_queue[i].id, "live":User_queue[i].eaten, "map": map};
+                result = {"myx":Math.round(User_queue[i].x),"myy":Math.round(User_queue[i].y),"mysize":Math.round(User_queue[i].r),"id":User_queue[i].id, "live":User_queue[i].eaten, "map": map};
                 break;
             }
             else
