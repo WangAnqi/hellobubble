@@ -3,7 +3,7 @@ var WS = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
 var net = require('net');
 var con = require('./controller/hello_bubble');
 var Server = net.createServer();
-var INTIME = 200;
+var INTIME = 100;
 
 Server.on("connection",function(o){//o: class net.socket
     var key;
@@ -33,7 +33,7 @@ Server.on("connection",function(o){//o: class net.socket
                 console.log("Close the ws...");
             }
             else{
-                //console.log(packet);
+                console.log(packet);
                 strdata = packet.PayloadData;
                 data = JSON.parse(strdata);
                 //console.log(data);
@@ -52,7 +52,7 @@ Server.on("connection",function(o){//o: class net.socket
                         break;
                     case 2:
                         con.setIDAction(data.data);
-                        console.log(data.data);
+                        //console.log(data.data);
                         break;
                     case 3:
                         con.setIDQuitGame(data.data);
