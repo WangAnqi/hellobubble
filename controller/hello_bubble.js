@@ -222,8 +222,11 @@ exports.getIDMapAction = function (data)
     var map = [];
     for(var i = 0; i<User_queue.length; i++)
     {
-    	var temp = {"id":User_queue[i].id,"x":Math.round(User_queue[i].x),"y":Math.round(User_queue[i].y),"size":Math.round(User_queue[i].r),"type":User_queue[i].type,"name":User_queue[i].name};
-        map.push(temp);
+    	if(User_queue[i].start == false)
+    	{
+    		var temp = {"id":User_queue[i].id,"x":Math.round(User_queue[i].x),"y":Math.round(User_queue[i].y),"size":Math.round(User_queue[i].r),"type":User_queue[i].type,"name":User_queue[i].name};
+        	map.push(temp);
+        }
     }
     for(var i = 0; i<randomBubble_queue.length; i++)
     {
