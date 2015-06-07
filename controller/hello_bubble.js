@@ -162,11 +162,11 @@ function resetBubble(Bubble)
     Bubble.allscore = 0;
     Bubble.score = 0;
     Bubble.dividecount = 0;
-    Bubble.name = "string";
+    //Bubble.name = "string";
     Bubble.finish = false;
     Bubble.start = false;
     Bubble.type = 1;
-    Bubble.restart = true;
+    Bubble.restart = false;
 }
 
 exports.setIDName = function (data){
@@ -217,8 +217,6 @@ exports.getIDMapAction = function (data)
     move();
     //检查是否被吃
     eat();
-    //检查是否有需要重新开始的用户
-    restart();
     var result = {};
     var map = [];
     for(var i = 0; i<User_queue.length; i++)
@@ -261,6 +259,8 @@ exports.getIDMapAction = function (data)
             }
         }
     } 
+    //检查是否有需要重新开始的用户
+    restart();
     return result;
 }
 
@@ -270,8 +270,9 @@ function restart()
     {
         if(User_queue[i].dividecount == 0)
         {
-            if(User_queue[i].live){
+            if(!User_queue[i].live){
                 User_queue[i].restart = true;
+                resetBubble(User_queue[i]);
             }
         }
         else
