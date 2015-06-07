@@ -19,7 +19,6 @@ function randomBubble(){
         randomBubble_queue[i].type = 0;
     }
     Bubblelength = 100;
-    console.log(randomBubble_queue);
 }
 
 //bubble◊‘œ‡≤–…±
@@ -195,7 +194,6 @@ exports.setIDAction = function (data)
         if(data.id == User_queue[i].id)
         {
             User_queue[i].vecx = data.directionx;
-            console.log(" Û±Íx£∫" + User_queue[i].vecx);
             User_queue[i].vecy = data.directiony;
             if(data.keydown == true)
             	User_queue[i].dividecount++;
