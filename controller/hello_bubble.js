@@ -7,6 +7,7 @@ var Userlength = 0;//用户总数
 var Bubblelength = 0;
 var start = false;//开始
 
+exports.Users = User_queue;
 //生成随机的Bubble
 function randomBubble(){
     for(var i = Bubblelength; i<100; i++)

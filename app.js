@@ -9,6 +9,7 @@ Server.on("connection",function(o){//o: class net.socket
     var key;
     var interval;
     var player_id;
+    var send_flag;
     o.on('data',function(e){
         if(!key){
             //握手
@@ -21,16 +22,15 @@ Server.on("connection",function(o){//o: class net.socket
             o.write('Sec-WebSocket-Accept: ' + key + '\r\n');
             o.write('\r\n');
             
-            //console.log(o.remoteAddress);
-            //console.log(o.remotePort);
         }else{
         	
         	  var packet = decodeDataFrame(e);
         	  
         	  if(packet.Opcode==8){
+                console.log("Close the ws...");
+                clearInterval(interval);
                 con.setIDEndGame(player_id);
                 o.end(); //断开连接
-                console.log("Close the ws...");
             }
             else{
                 console.log(packet);
@@ -65,19 +65,21 @@ Server.on("connection",function(o){//o: class net.socket
     });
     
     o.on('close',function(e){
-    	clearInterval(interval);
+    	//clearInterval(interval);
     	console.log("Close interval send data")
     });
 
     function sendPlayersAction(){
-	    if(key){
+        if(!(con.Users[player_id.id])) return;
+        try{
             actions = con.getIDMapAction(player_id);
-            //console.log(actions);
+            console.log(actions);
             sendTextData(o,JSON.stringify(actions));
-            //console.log("Come on!");
-	    }
+        }
+        catch(e){
+          console.log(e);
+        }
     }
-    
 });
 Server.listen(8000);
 
@@ -93,6 +95,7 @@ function sendClose(o,buf){
 }
 
 function sendTextData(o,buf){
+  console.log(buf.length);
     var data = {
                    FIN:1,
                    Opcode:1,
@@ -139,16 +142,16 @@ function encodeDataFrame(e){
   //永远不使用掩码
   if(l<126){
     s.push(l);
-    console.log("data length"+"<126");
+    //console.log("data length"+"<126");
   }
   else if(l<0x10000){
-    s.push(126,(l&0xFF00)>>2,l&0xFF);
-    console.log("data length"+"126");
+    s.push(126,(l&0xFF00)>>8,l&0xFF);
+    //console.log("data length"+"126");
   }
   else{
     s.push(
-      127, (l&0xFF00000000000000)>>14,(l&0xFF000000000000)>>12,(l&0xFF0000000000)>>10,(l&0xFF00000000)>>8, //8字节数据，前4字节一般没用留空
-      (l&0xFF000000)>>6,(l&0xFF0000)>>4,(l&0xFF00)>>2,l&0xFF
+      127, (l&0xFF00000000000000)>>56,(l&0xFF000000000000)>>48,(l&0xFF0000000000)>>40,(l&0xFF00000000)>>32, //8字节数据，前4字节一般没用留空
+      (l&0xFF000000)>>24,(l&0xFF0000)>>16,(l&0xFF00)>>8,l&0xFF
     );
     console.log("data length"+"127");
   }
