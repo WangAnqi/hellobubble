@@ -3,7 +3,7 @@ var WS = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
 var net = require('net');
 var con = require('./controller/hello_bubble');
 var Server = net.createServer();
-var INTIME = 100;
+var INTIME = 1000/60;
 var RANDOMBUBBLE = 20000;
 
 Server.on("connection",function(o){//o: class net.socket
@@ -34,7 +34,7 @@ Server.on("connection",function(o){//o: class net.socket
                 o.end(); //断开连接
             }
             else{
-                console.log(packet);
+                //console.log(packet);
                 strdata = packet.PayloadData;
                 data = JSON.parse(strdata);
                 //console.log(data);
@@ -49,7 +49,7 @@ Server.on("connection",function(o){//o: class net.socket
                         break;
                     case 1:
                         con.setIDName(data.data);
-                        console.log(data.data);
+                        //console.log(data.data);
                         break;
                     case 2:
                         con.setIDAction(data.data);
@@ -57,7 +57,7 @@ Server.on("connection",function(o){//o: class net.socket
                         break;
                     case 3:
                         con.setIDQuitGame(data.data);
-                        console.log(data.data);
+                        //console.log(data.data);
                         break;
                     default:
                 }    
@@ -74,7 +74,7 @@ Server.on("connection",function(o){//o: class net.socket
         if(!(con.Users[player_id.id])) return;
         //try{
             actions = con.getIDMapAction(player_id);
-            console.log(actions);
+            //console.log(actions);
             sendTextData(o,JSON.stringify(actions));
         //}
         //catch(e){
@@ -99,7 +99,7 @@ function sendClose(o,buf){
 }
 
 function sendTextData(o,buf){
-  console.log(buf.length);
+  //console.log(buf.length);
     var data = {
                    FIN:1,
                    Opcode:1,
@@ -157,7 +157,7 @@ function encodeDataFrame(e){
       127, (l&0xFF00000000000000)>>56,(l&0xFF000000000000)>>48,(l&0xFF0000000000)>>40,(l&0xFF00000000)>>32, //8字节数据，前4字节一般没用留空
       (l&0xFF000000)>>24,(l&0xFF0000)>>16,(l&0xFF00)>>8,l&0xFF
     );
-    console.log("data length"+"127");
+    //console.log("data length"+"127");
   }
   //返回头部分和数据部分的合并缓冲区
   return Buffer.concat([new Buffer(s),o]);
