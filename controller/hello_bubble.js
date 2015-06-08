@@ -10,7 +10,7 @@ var start = false;//开始
 exports.Users = User_queue;
 //生成随机的Bubble
 exports.randomBubble = function (){
-    for(var i = Bubblelength; i<20; i++)
+    for(var i = User_queue.length; i<30; i++)
     {
         randomBubble_queue[i] = new Object();
         randomBubble_queue[i].x = Math.floor(Math.random() * globle_width);
@@ -19,7 +19,6 @@ exports.randomBubble = function (){
         randomBubble_queue[i].score = 1;
         randomBubble_queue[i].type = 0;
     }
-    Bubblelength = 100;
 }
 
 //bubble自相残杀
@@ -39,21 +38,36 @@ function eat(){
             }
             for(var j = i+1; j<User_queue.length; j++)
             {
-                if(User_queue[j].start == true && User_queue[j].live)
+                if(User_queue[j].id != User_queue[i].id)
                 {
-                    if(User_queue[i].r > User_queue[j].r) {
-                        if (distance(User_queue[i], User_queue[j]) < User_queue[i].r - User_queue[j].r) {
-                            checkstate(User_queue[i], User_queue[j]);
-                            Userlength--;
+                    if(User_queue[j].start == true && User_queue[j].live)
+                    {
+                        if(User_queue[i].r > User_queue[j].r) {
+                            if (distance(User_queue[i], User_queue[j]) < User_queue[i].r - User_queue[j].r) {
+                                checkstate(User_queue[i], User_queue[j]);
+                                Userlength--;
+                            }
                         }
-                    }
-                    else if(User_queue[i].r < User_queue[j].r) {
-                        if (distance(User_queue[j], User_queue[i]) < User_queue[j].r - User_queue[i].r) {
-                            checkstate(User_queue[j], User_queue[i]);
-                            Userlength--;
+                        else if(User_queue[i].r < User_queue[j].r) {
+                            if (distance(User_queue[j], User_queue[i]) < User_queue[j].r - User_queue[i].r) {
+                                checkstate(User_queue[j], User_queue[i]);
+                                Userlength--;
+                            }
                         }
                     }
                 }
+                /*if(User_queue[i].id == User_queue[j].id)
+                {
+                    if(User_queue[j].start == true && User_queue[j].live)
+                    {
+                        if(distance(User_queue[i], User_queue[j]) < 4/5*(User_queue[i].r - User_queue[j].r))
+                        {
+                            checkstate(User_queue[i], User_queue[j]);
+                            User_queue.splice(j,1);
+                            Userlength--;
+                        }
+                    }
+                }*/
             }
         }
 
@@ -96,17 +110,17 @@ function distance(bubblebig, bubblesmall)
 function splite(Bubble){
     //var count = Math.pow(2,Bubble.dividecount++);
     var r = Math.sqrt(1/2) * Bubble.r;
-    var speed = Bubble.v / 2;
+    var speed = Bubble.v;
     var score = Bubble.score /2;
     Bubble.r = r;
     Bubble.v = speed;
     Bubble.score = score;
-    Bubble.dividecount++;
+    Bubble.dividecount = 0;
     var sx = Bubble.vecx - Bubble.x;
     var sy = Bubble.vecy - Bubble.y;
     var x = Bubble.x + 2*Bubble.r * (sx / Math.sqrt(sx*sx + sy*sy));
     var y = Bubble.y + 2*Bubble.r * (sy / Math.sqrt(sx*sx + sy*sy));
-    spliteBubble(User_queue.length, x, y, Bubble.id, Bubble.vecx, Bubble.vecy, speed*3, Bubble.dividecount, score,Bubble.allscore);
+    spliteBubble(Userlength, x, y, r, Bubble.id, Bubble.vecx, Bubble.vecy, speed, score,Bubble.allscore,Bubble.name);
 }
 
 //建立小球，返回ID
@@ -133,7 +147,7 @@ exports.getID = function (){
     return result;
 }
 
-function spliteBubble(pos, x, y, r, id, vecx, vecy, v, dc, score, allscore)
+function spliteBubble(pos, x, y, r, id, vecx, vecy, v, score, allscore, name)
 {
     User_queue[pos] = new Object();
     User_queue[pos].id = id;
@@ -143,14 +157,15 @@ function spliteBubble(pos, x, y, r, id, vecx, vecy, v, dc, score, allscore)
     User_queue[pos].v = v;
     User_queue[pos].vecx = vecx;
     User_queue[pos].vecy = vecy;
-    User_queue[pos].live = false;
+    User_queue[pos].live = true;
     User_queue[pos].allscore = allscore;
     User_queue[pos].score = score;
-    User_queue[pos].dividecount = dc;
-    User_queue[pos].name = "string";
+    User_queue[pos].dividecount = 0;
+    User_queue[pos].name = name;
     User_queue[pos].finish = false;
     User_queue[pos].type = 1;
     User_queue[pos].restart = false;
+    Userlength++;
 }
 
 function resetBubble(Bubble)
@@ -200,11 +215,14 @@ exports.setIDAction = function (data)
         {
             User_queue[i].vecx = data.directionx;
             User_queue[i].vecy = data.directiony;
-            if(data.keydown == true)
+            if(data.keydown)
+            {
             	User_queue[i].dividecount++;
+                console.log(User_queue[i].dividecount);
+            }
         }
-        if(User_queue[i].dividecount != 0)
-        	splite(User_queue[i]);
+        //if(User_queue[i].dividecount != 0)
+        	//splite(User_queue[i]);
     }
 }
 
@@ -223,6 +241,11 @@ exports.getIDMapAction = function (data)
     eat();
     var result = {};
     var map = [];
+    for(var i = 0; i<User_queue.length; i++)
+    {
+        if(User_queue[i].dividecount != 0)
+            splite(User_queue[i]);
+    }
     for(var i = 0; i<User_queue.length; i++)
     {	
     	if(User_queue[i].live)
@@ -247,7 +270,7 @@ exports.getIDMapAction = function (data)
                 var count = 0;
                 var xbar = 0;
                 var ybar = 0;
-                for(var j = i; i<User_queue.length; j++)
+                for(var j = i; j<User_queue.length; j++)
                 {
                     if(User_queue[j].id == User_queue[i].id)
                     {

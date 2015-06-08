@@ -3,7 +3,7 @@ var WS = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
 var net = require('net');
 var con = require('./controller/hello_bubble');
 var Server = net.createServer();
-var INTIME = 100;
+var INTIME = 1000/60;
 var RANDOMBUBBLE = 20000;
 
 Server.on("connection",function(o){//o: class net.socket
