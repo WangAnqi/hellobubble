@@ -94,7 +94,7 @@ function checkstate(Bubblebig,Bubblesmall)
 {
     Bubblesmall.live = false;
     Bubblebig.r = Math.sqrt(Bubblebig.r*Bubblebig.r + Bubblesmall.r*Bubblesmall.r);
-    Bubblebig.v = 2000 / (Bubblebig.r * Bubblebig.r);
+    Bubblebig.v = 150 /  Bubblebig.r;
     Bubblebig.allscore += Bubblesmall.score;
     Bubblebig.score += Bubblesmall.score;
 }
@@ -110,7 +110,7 @@ function distance(bubblebig, bubblesmall)
 function splite(Bubble){
     //var count = Math.pow(2,Bubble.dividecount++);
     var r = Math.sqrt(1/2) * Bubble.r;
-    var speed = 2000 / (r*r);
+    var speed = 150 / r;
     var score = Bubble.score /2;
     Bubble.r = r;
     Bubble.v = speed;
@@ -130,7 +130,7 @@ exports.getID = function (){
     User_queue[Userlength].x = Math.floor(Math.random()*1000);
     User_queue[Userlength].y = Math.floor(Math.random()*1000);
     User_queue[Userlength].r = Math.floor(Math.random()*20 + 10);
-    User_queue[Userlength].v = 2000 / (User_queue[Userlength].r * User_queue[Userlength].r);
+    User_queue[Userlength].v = 150 / User_queue[Userlength].r;
     User_queue[Userlength].vecx = User_queue[Userlength].x + 1;
     User_queue[Userlength].vecy = User_queue[Userlength].y + 1;
     User_queue[Userlength].live = false;
@@ -173,7 +173,7 @@ function spliteBubble(pos, x, y, r, id, vecx, vecy, v, score, allscore, name)
 function resetBubble(Bubble)
 {
     Bubble.r = 20;
-    Bubble.v = 2000 / (Bubble.r * Bubble.r);
+    Bubble.v = 150 / Bubble.r;
     Bubble.vecx = 0;
     Bubble.vecy = 0;
     Bubble.live = false;
