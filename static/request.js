@@ -14,6 +14,7 @@ ws.onmessage = function(e){
     var msg = e.data;
     //console.log(msg);
     console.log(e);
+    console.log(msg.length);
     
 }
 
@@ -28,11 +29,12 @@ ws.onclose = function(e){
 
 //test function
 function wstry(){
-	ws.close();
+    ws.send('{"type":0}');
+	
 	//ws.send("{'name':'tsinghua','age':104}");
 }
 
 function clientclosesocket(){
-   ws.send('{"type":0}');
+   ws.close();
 }
 
