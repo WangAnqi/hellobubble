@@ -39,25 +39,7 @@
         DirectionY=0;
         smallcircle=[];
         bigcircle=[];
-        team1 = Object.create(circle);
-        team1.x=200;
-        team1.size=100;
-        team1.name="23333"
-        if(team1.type==1){smallcircle.push(team1);}
-        else{bigcircle.push(team1); } 
          
-        team2 = Object.create(circle);
-        team2.type=1;
-        
-         if(team2.type==1){smallcircle.push(team2);}
-        else{bigcircle.push(team2); }  
-        team3 = Object.create(circle);
-        team3.type=2;
-        team3.x=800;
-        team3.y=400;
-        team3.size=100;   
-        if(team3.type==1){smallcircle.push(team3);}
-        else{bigcircle.push(team3); }  
         
         win.onresize = myresize;
         myresize();
@@ -71,11 +53,9 @@
     
     function clickplay(){
         myname = '"'+$("#nick")[0].value+'"';
-        console.log(myname);
         ws.send('{"type":1,"data":{"id":'+myid+',"name":'+myname+'}}'); 
         myname = $("#nick")[0].value;
-        team1.name = myname;
-    }  
+    }
     
     function getDirection(num){
         DirectionX = (mouseX - winW / 2) / myscal+myx;
@@ -122,10 +102,18 @@
             play.x = mymap[i].x
             play.y = mymap[i].y
             play.name = mymap[i].name
+            if(play.id==-1){    
+                play.color1=mycolor1[play.x % 3];
+                play.color2=mycolor2[play.x % 3];
+                play.type=0;
+            }
+            else{
+                play.color1=mycolor1[play.id % 3]
+                play.color2=mycolor2[play.id % 3]
+            }
             if(play.type==0){smallcircle.push(play);}
             else{bigcircle.push(play); } 
         }
-        console.log(bigcircle)
         paint();
     }
     
@@ -174,7 +162,12 @@
         for(i=0;i<smallcircle.length;i++) {smallcircle[i].draw();}
         for(i=0;i<bigcircle.length;i++) {bigcircle[i].draw();}
         myContext.restore();
-        console.log(1);
+        myContext.save();
+        myContext.textAlign = 'left';
+        myContext.fillStyle = '#000000';
+        myContext.font = 'bold 20px arial';
+        myContext.strokeText("socal:"+parseInt(10+2*mysize), 30, winH-30);
+        myContext.restore();
     }
     
     var circle = {
@@ -201,7 +194,7 @@
                     myContext.lineTo(this.x+this.size*0.95*Math.cos(Math.PI*(2*i+1)/40), this.y+this.size*0.95*Math.sin(Math.PI*(2*i+1)/40));
                 }
             }
-            else if(this.type == 0)
+            else if(this.type == 4)
             {
                 myContext.moveTo(this.x+this.size*1*Math.cos(15), this.y+this.size*1*Math.sin(15));
                 for(i=0;i<6;i++)
@@ -235,7 +228,8 @@
             myContext.restore();
         }
     }
-  
+    mycolor1=["#00FF00","#FF0000","#0000FF"]
+    mycolor2=["#00DD00","#DD0000","#0000DD"]
     win.onload = Start;
     myscal=1;
     mysize=0;
