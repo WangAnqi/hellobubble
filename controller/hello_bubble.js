@@ -86,6 +86,7 @@ function move()
             User_queue[i].x += freq * User_queue[i].v * (sx / Math.sqrt(sx*sx + sy*sy));
             User_queue[i].y += freq * User_queue[i].v * (sy / Math.sqrt(sx*sx + sy*sy));
         }
+        inbound(User_queue[i]);
     }
 }
 
@@ -323,4 +324,15 @@ function restart()
             }
         }
     }
+}
+
+function inbound(Bubble){
+	if(Bubble.x + Bubble.r >= 2500)
+		Bubble.x = 2500;
+	else if(Bubble.x - Bubble.r <= -2500)
+		Bubble.x = -2500;
+	else if(Bubble.y + Bubble.r >= 2500)
+		Bubble.y = 2500;
+	else if(Bubble.y - Bubble.r <= -2500)
+		Bubble.y = -2500;
 }
