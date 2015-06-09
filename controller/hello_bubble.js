@@ -166,7 +166,7 @@ function spliteBubble(pos, x, y, r, id, vecx, vecy, v, score, allscore, name)
     User_queue[pos].type = 1;
     User_queue[pos].start = true;
     User_queue[pos].restart = false;
-    console.log(User_queue[pos]);
+    //console.log(User_queue[pos]);
     Userlength++;
 }
 
