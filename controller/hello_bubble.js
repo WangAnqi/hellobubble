@@ -45,13 +45,13 @@ function eat(){
                         if(User_queue[i].r > User_queue[j].r) {
                             if (distance(User_queue[i], User_queue[j]) < User_queue[i].r - User_queue[j].r) {
                                 checkstate(User_queue[i], User_queue[j]);
-                                Userlength--;
+                                //Userlength--;
                             }
                         }
                         else if(User_queue[i].r < User_queue[j].r) {
                             if (distance(User_queue[j], User_queue[i]) < User_queue[j].r - User_queue[i].r) {
                                 checkstate(User_queue[j], User_queue[i]);
-                                Userlength--;
+                                //Userlength--;
                             }
                         }
                     }
@@ -170,8 +170,9 @@ function spliteBubble(pos, x, y, r, id, vecx, vecy, v, score, allscore, name)
     Userlength++;
 }
 
-function resetBubble(Bubble)
+function resetBubble(Bubble,id)
 {
+    Bubble.id = id;
     Bubble.r = 20;
     Bubble.v = 150 / Bubble.r;
     Bubble.vecx = 0;
@@ -301,7 +302,7 @@ function restart()
         {
             if(!User_queue[i].live){
                 User_queue[i].restart = true;
-                resetBubble(User_queue[i]);
+                resetBubble(User_queue[i],User_queue[i].id);
             }
         }
         else
@@ -318,7 +319,7 @@ function restart()
                     if(User_queue[j].id == User_queue[i].id)
                         User_queue.splice(j,1);
                 }
-                resetBubble(User_queue[i]);
+                resetBubble(User_queue[i],User_queue[i].id);
             }
         }
     }
