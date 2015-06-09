@@ -253,13 +253,13 @@ exports.getIDMapAction = function (data)
     {	
     	if(User_queue[i].live)
     	{
-    		var temp = {"id":User_queue[i].id,"x":Math.round(User_queue[i].x),"y":Math.round(User_queue[i].y),"size":User_queue[i].r,"type":User_queue[i].type,"name":User_queue[i].name};
+    		var temp = [User_queue[i].id,Math.round(User_queue[i].x),Math.round(User_queue[i].y),User_queue[i].r,User_queue[i].name];
        		map.push(temp);
         }
     }
     for(var i = 0; i<randomBubble_queue.length; i++)
     {
-    	var temp = {"id":-1,"x":randomBubble_queue[i].x,"y":randomBubble_queue[i].y,"size":randomBubble_queue[i].r,"type":randomBubble_queue[i].type,"name":randomBubble_queue[i].name}
+    	var temp = [-1,randomBubble_queue[i].x,randomBubble_queue[i].y,randomBubble_queue[i].r,randomBubble_queue[i].name];
         map.push(temp);
     }
     for(var i = 0; i<User_queue.length; i++) {
