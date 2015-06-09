@@ -10,7 +10,7 @@ var start = false;//开始
 exports.Users = User_queue;
 //生成随机的Bubble
 exports.randomBubble = function (){
-    for(var i = User_queue.length; i<100; i++)
+    for(var i = User_queue.length; i<20; i++)
     {
         randomBubble_queue[i] = new Object();
         randomBubble_queue[i].x = Math.floor(Math.random() * globle_width);
