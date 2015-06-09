@@ -12,10 +12,9 @@
             
         ws.onmessage = function(e){
             msg =  JSON.parse(e.data);
-            console.log(e);
             getmessage();
         }
-        
+       
         mycanvas = document.getElementById("canvas");
         myContext = mycanvas.getContext("2d");
         
@@ -37,10 +36,12 @@
         };
         DirectionX=0;
         DirectionY=0;
+        keycontrol=!1;
         smallcircle=[];
         bigcircle=[];
-         
-        
+        mytimer=null;
+        mouseX=0;
+        mouseY=0;
         win.onresize = myresize;
         myresize();
         $("#playBtn")[0].onclick=clickplay;
@@ -53,11 +54,13 @@
     
     function clickplay(){
         myname = '"'+$("#nick")[0].value+'"';
+        console.log(myname);
         ws.send('{"type":1,"data":{"id":'+myid+',"name":'+myname+'}}'); 
         myname = $("#nick")[0].value;
-    }
+    }  
     
     function getDirection(num){
+        console.log(mouseX);
         DirectionX = (mouseX - winW / 2) / myscal+myx;
         DirectionY = (mouseY - winH / 2) / myscal+myy;
         if(num==0)
@@ -68,6 +71,8 @@
             ws.send('{"type":2,"data":{"id":'+myid+',"directionx":'+DirectionX+',"directiony":'+DirectionY+',"keydown":true}}');
         }
     }
+    
+    function getDirection0(){getDirection(0)}
       
     function myresize(){
         winW = win.innerWidth;
@@ -83,13 +88,18 @@
         myy = msg.myy;
         myid = msg.id;
         mysize = msg.mysize;
-        mymap = msg.map
+        mymap = msg.map;
         if(msg.live)
         {
             $("#overlays").hide();
+            if(!mytimer){   
+                console.log(1);
+                mytimer=setInterval(getDirection0,100);}    
         }
         else
         {
+            if(mytimer){    
+                clearInterval(mytimer);}
             $("#overlays").show();
         }
         smallcircle=[];
@@ -118,25 +128,9 @@
     }
     
     function paint(){
-        //myy++;
         
-       /* mysize=team1.size;*/
         myscal=0.8-mysize/200*0.2;
-        if(myscal==0){myscal=0.05}
-            /*
-        if(DirectionX*DirectionX+DirectionY*DirectionY>100)
-        {
-            team1.x+=25*DirectionX/Math.sqrt(team1.size*(DirectionX*DirectionX+DirectionY*DirectionY));
-            team1.y+=25*DirectionY/Math.sqrt(team1.size*(DirectionX*DirectionX+DirectionY*DirectionY));
-        }
-        if(team1.x<0) {team1.x=0;}
-        if(team1.y<0) {team1.y=0;}
-        if(team1.x>10000) {team1.x=10000;}
-        if(team1.y>10000) {team1.y=10000;}
-        myx = team1.x
-        myy = team1.y;*/
-        
-        console.log(myx)
+        if(myscal==0){myscal=0.05};
         myContext.clearRect(0, 0, winW, winH);
         myContext.fillStyle = "#F2FBFF";
         myContext.fillRect(0, 0, winW, winH);
@@ -166,7 +160,7 @@
         myContext.textAlign = 'left';
         myContext.fillStyle = '#000000';
         myContext.font = 'bold 20px arial';
-        myContext.strokeText("socal:"+parseInt(10+2*mysize), 30, winH-30);
+        myContext.strokeText("score:"+parseInt(10+2*mysize), 30, winH-30);
         myContext.restore();
     }
     
