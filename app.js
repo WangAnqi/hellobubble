@@ -34,7 +34,8 @@ Server.on("connection",function(o){//o: class net.socket
                 o.end(); //断开连接
             }
             else{
-                //console.log(packet);
+            try{
+                 //console.log(packet);
                 strdata = packet.PayloadData;
                 data = JSON.parse(strdata);
                 //console.log(data);
@@ -61,6 +62,8 @@ Server.on("connection",function(o){//o: class net.socket
                         break;
                     default:
                 }    
+            }catch(e){}
+               
             }
         };
     });
