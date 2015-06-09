@@ -13,8 +13,8 @@ exports.randomBubble = function (){
     for(var i = User_queue.length; i<20; i++)
     {
         randomBubble_queue[i] = new Object();
-        randomBubble_queue[i].x = Math.floor(Math.random() * globle_width);
-        randomBubble_queue[i].y = Math.floor(Math.random() * globle_height);
+        randomBubble_queue[i].x = Math.floor(Math.random() * globle_width/2);
+        randomBubble_queue[i].y = Math.floor(Math.random() * globle_height/2);
         randomBubble_queue[i].r = 5;
         randomBubble_queue[i].score = 1;
         randomBubble_queue[i].type = 0;
@@ -328,11 +328,11 @@ function restart()
 
 function inbound(Bubble){
 	if(Bubble.x + Bubble.r >= 2500)
-		Bubble.x = 2500;
+		Bubble.x = 2500-Bubble.r;
 	else if(Bubble.x - Bubble.r <= -2500)
-		Bubble.x = -2500;
+		Bubble.x = -2500+Bubble.r;
 	else if(Bubble.y + Bubble.r >= 2500)
-		Bubble.y = 2500;
+		Bubble.y = 2500-Bubble.r;
 	else if(Bubble.y - Bubble.r <= -2500)
-		Bubble.y = -2500;
+		Bubble.y = -2500+Bubble.r;
 }

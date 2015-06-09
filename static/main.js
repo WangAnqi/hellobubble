@@ -5,7 +5,7 @@
         //win.onbeforeunload = gamestop;
         myid=0;
         mykeydown=!1
-        ws=new WebSocket("ws://101.5.232.175:8000/");
+        ws=new WebSocket("ws://59.66.137.43:8000/");
         ws.onopen=function(e){
             ws.send('{"type":0}'); 
             console.log("成功");};
