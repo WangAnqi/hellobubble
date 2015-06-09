@@ -5,7 +5,7 @@
         //win.onbeforeunload = gamestop;
         myid=0;
         mykeydown=!1
-        ws=new WebSocket("ws://127.0.0.1:8000/");
+        ws=new WebSocket("ws://101.5.232.175:8000/");
         ws.onopen=function(e){
             ws.send('{"type":0}'); 
             console.log("成功");};
@@ -46,23 +46,33 @@
         myresize();
         $("#playBtn")[0].onclick=clickplay;
         //setInterval(paint, 1E3 / 60);
+        //setInterval(reconnect, 1000);
     }
       
     function gamestop(){
         ws.send('{"type":3,"data":{"id":'+myid+'}}'); 
     }
     
+   /* function reconnect()
+    {
+        if(ws.readyState!=1)
+        {
+            console.log(ws.readyState);
+            ws=new WebSocket("ws://101.5.232.175:8000/");
+        }
+    }*/
+    
+    
     function clickplay(){
         myname = '"'+$("#nick")[0].value+'"';
-        console.log(myname);
         ws.send('{"type":1,"data":{"id":'+myid+',"name":'+myname+'}}'); 
         myname = $("#nick")[0].value;
     }  
     
     function getDirection(num){
-        console.log(mouseX);
         DirectionX = (mouseX - winW / 2) / myscal+myx;
         DirectionY = (mouseY - winH / 2) / myscal+myy;
+        console.log(ws.readyState);
         if(num==0)
         {
             ws.send('{"type":2,"data":{"id":'+myid+',"directionx":'+DirectionX+',"directiony":'+DirectionY+',"keydown":false}}');
@@ -93,7 +103,6 @@
         {
             $("#overlays").hide();
             if(!mytimer){   
-                console.log(1);
                 mytimer=setInterval(getDirection0,100);}    
         }
         else
@@ -107,11 +116,16 @@
         for(i=0;i<mymap.length;i++)
         {
             play = Object.create(circle);
-            play.id=mymap[i].id
+           /* play.id=mymap[i].id
             play.size=mymap[i].size
             play.x = mymap[i].x
             play.y = mymap[i].y
-            play.name = mymap[i].name
+            play.name = mymap[i].name*/
+            play.id=mymap[i][0]
+            play.x = mymap[i][1]
+            play.y = mymap[i][2]
+            play.size=mymap[i][3]
+            play.name = mymap[i][4]
             if(play.id==-1){    
                 play.color1=mycolor1[play.x % 3];
                 play.color2=mycolor2[play.x % 3];
